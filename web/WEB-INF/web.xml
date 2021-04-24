@@ -5,12 +5,20 @@
         <servlet-class>com.fpt.controller.admin.AdminUserController</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>AdminBillController</servlet-name>
+        <servlet-class>com.fpt.controller.admin.AdminBillController</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>AdminProductController</servlet-name>
         <servlet-class>com.fpt.controller.admin.AdminProductController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AdminUserController</servlet-name>
         <url-pattern>/AdminUserController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminBillController</servlet-name>
+        <url-pattern>/AdminBillController</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AdminProductController</servlet-name>

@@ -51,6 +51,8 @@ public class Bill implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "amount", precision = 53)
     private Double amount;
+    @Column(name = "bStatus")
+    private Integer bStatus;
     @OneToMany(mappedBy = "billId")
     private Collection<BillDetail> billDetailCollection;
     @JoinColumn(name = "userId", referencedColumnName = "id")
@@ -64,6 +66,16 @@ public class Bill implements Serializable {
         this.id = id;
     }
 
+    public Integer getbStatus() {
+        return bStatus;
+    }
+
+    public void setbStatus(Integer bStatus) {
+        this.bStatus = bStatus;
+    }
+
+    
+    
     public Integer getId() {
         return id;
     }
