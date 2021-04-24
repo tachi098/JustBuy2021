@@ -32,7 +32,7 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="AdminProductController?view=show" class="nav-link">
                         <i class="nav-icon fas fa-percent"></i>
                         <p>
                             Product
@@ -41,7 +41,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="../../index.html" class="nav-link">
+                            <a href="AdminProductController?view=create" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Create</p>
                             </a>

@@ -37,7 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p"),
-    @NamedQuery(name = "Product.findById", query = "SELECT p FROM Product p WHERE p.id = :id"),
+    @NamedQuery(name = "Product.findById", query = "SELECT p FROM Product p WHERE p.id = :id"), 
     @NamedQuery(name = "Product.findByName", query = "SELECT p FROM Product p WHERE p.name = :name"),
     @NamedQuery(name = "Product.findByImage", query = "SELECT p FROM Product p WHERE p.image = :image"),
     @NamedQuery(name = "Product.findByDescription", query = "SELECT p FROM Product p WHERE p.description = :description"),
@@ -76,6 +76,9 @@ public class Product implements Serializable {
     @Column(name = "launchDate")
     @Temporal(TemporalType.DATE)
     private Date launchDate;
+    @Column(name = "deleteDate")
+    @Temporal(TemporalType.DATE)
+    private Date deleteDate;
     @OneToMany(mappedBy = "productId")
     private Collection<Image> imageCollection;
     @JoinColumn(name = "cateId", referencedColumnName = "id")
@@ -100,14 +103,6 @@ public class Product implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-
-//    public Integer getStored() {
-//        return stored;
-//    }
-//
-//    public void setStored(Integer stored) {
-//        this.stored = stored;
-//    }
 
     public String getName() {
         return name;
@@ -141,14 +136,6 @@ public class Product implements Serializable {
         this.price = price;
     }
 
-//    public String getStock() {
-//        return stock;
-//    }
-//
-//    public void setStock(String stock) {
-//        this.stock = stock;
-//    }
-
     public Integer getStock() {
         return stock;
     }
@@ -157,7 +144,6 @@ public class Product implements Serializable {
         this.stock = stock;
     }
 
-    
     public Date getLaunchDate() {
         return launchDate;
     }
@@ -200,6 +186,14 @@ public class Product implements Serializable {
         this.discount = discount;
     }
 
+    public Date getDeleteDate() {
+        return deleteDate;
+    }
+
+    public void setDeleteDate(Date deleteDate) {
+        this.deleteDate = deleteDate;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -224,5 +218,5 @@ public class Product implements Serializable {
     public String toString() {
         return "com.fpt.model.Product[ id=" + id + " ]";
     }
-    
+
 }
