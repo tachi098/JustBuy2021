@@ -17,6 +17,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -41,6 +42,7 @@ public class Category implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
     @Size(max = 50)
+    @NotBlank(message = "Please enter category name!")
     @Column(name = "name", length = 50)
     private String name;
     @OneToMany(mappedBy = "cateId")

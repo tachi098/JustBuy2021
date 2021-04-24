@@ -35,8 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Bill.findAll", query = "SELECT b FROM Bill b"),
     @NamedQuery(name = "Bill.findById", query = "SELECT b FROM Bill b WHERE b.id = :id"),
-    @NamedQuery(name = "Bill.findByPurchaseDate", query = "SELECT b FROM Bill b WHERE b.purchaseDate = :purchaseDate"),
-    @NamedQuery(name = "Bill.findByAmount", query = "SELECT b FROM Bill b WHERE b.amount = :amount")})
+    @NamedQuery(name = "Bill.findByPurchaseDate", query = "SELECT b FROM Bill b WHERE b.purchaseDate = :purchaseDate")})
 public class Bill implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,9 +47,6 @@ public class Bill implements Serializable {
     @Column(name = "purchaseDate")
     @Temporal(TemporalType.DATE)
     private Date purchaseDate;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "amount", precision = 53)
-    private Double amount;
     @Column(name = "bStatus")
     private Integer bStatus;
     @OneToMany(mappedBy = "billId")
@@ -92,13 +88,7 @@ public class Bill implements Serializable {
         this.purchaseDate = purchaseDate;
     }
 
-    public Double getAmount() {
-        return amount;
-    }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
 
     @XmlTransient
     public Collection<BillDetail> getBillDetailCollection() {

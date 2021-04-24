@@ -23,6 +23,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -37,7 +38,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p"),
     @NamedQuery(name = "Product.findById", query = "SELECT p FROM Product p WHERE p.id = :id"),
-    @NamedQuery(name = "Product.findByStored", query = "SELECT p FROM Product p WHERE p.stored = :stored"),
     @NamedQuery(name = "Product.findByName", query = "SELECT p FROM Product p WHERE p.name = :name"),
     @NamedQuery(name = "Product.findByImage", query = "SELECT p FROM Product p WHERE p.image = :image"),
     @NamedQuery(name = "Product.findByDescription", query = "SELECT p FROM Product p WHERE p.description = :description"),
@@ -52,23 +52,27 @@ public class Product implements Serializable {
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
-    @Column(name = "stored")
-    private Integer stored;
+//    @Column(name = "stored")
+//    private Integer stored;
+    @Column(name = "stock")
+    private Integer stock;
     @Size(max = 50)
+    @NotBlank(message = "Please enter product name!")
     @Column(name = "name", length = 50)
     private String name;
     @Size(max = 50)
     @Column(name = "image", length = 50)
     private String image;
     @Size(max = 150)
+    @NotBlank(message = "Please enter product description!")
     @Column(name = "description", length = 150)
     private String description;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "price", precision = 53)
     private Double price;
-    @Size(max = 50)
-    @Column(name = "stock", length = 50)
-    private String stock;
+//    @Size(max = 50)
+//    @Column(name = "stock", length = 50)
+//    private String stock;
     @Column(name = "launchDate")
     @Temporal(TemporalType.DATE)
     private Date launchDate;
@@ -97,13 +101,13 @@ public class Product implements Serializable {
         this.id = id;
     }
 
-    public Integer getStored() {
-        return stored;
-    }
-
-    public void setStored(Integer stored) {
-        this.stored = stored;
-    }
+//    public Integer getStored() {
+//        return stored;
+//    }
+//
+//    public void setStored(Integer stored) {
+//        this.stored = stored;
+//    }
 
     public String getName() {
         return name;
@@ -137,14 +141,23 @@ public class Product implements Serializable {
         this.price = price;
     }
 
-    public String getStock() {
+//    public String getStock() {
+//        return stock;
+//    }
+//
+//    public void setStock(String stock) {
+//        this.stock = stock;
+//    }
+
+    public Integer getStock() {
         return stock;
     }
 
-    public void setStock(String stock) {
+    public void setStock(Integer stock) {
         this.stock = stock;
     }
 
+    
     public Date getLaunchDate() {
         return launchDate;
     }

@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Min;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -47,7 +48,7 @@ public class Discount implements Serializable {
     @Column(name = "end_date")
     @Temporal(TemporalType.DATE)
     private Date endDate;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Min(value = 0)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "percents", precision = 53)
     private Double percents;
     @JoinColumn(name = "productId", referencedColumnName = "id")
@@ -117,5 +118,5 @@ public class Discount implements Serializable {
     public String toString() {
         return "com.fpt.model.Discount[ id=" + id + " ]";
     }
-    
+
 }
