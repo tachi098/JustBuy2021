@@ -8,6 +8,14 @@
         <servlet-name>UserIndexController</servlet-name>
         <servlet-class>com.fpt.controller.user.UserIndexController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AdminBillController</servlet-name>
+        <servlet-class>com.fpt.controller.admin.AdminBillController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminProductController</servlet-name>
+        <servlet-class>com.fpt.controller.admin.AdminProductController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminUserController</servlet-name>
         <url-pattern>/AdminUserController</url-pattern>
@@ -15,6 +23,14 @@
     <servlet-mapping>
         <servlet-name>UserIndexController</servlet-name>
         <url-pattern>/UserIndexController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminBillController</servlet-name>
+        <url-pattern>/AdminBillController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminProductController</servlet-name>
+        <url-pattern>/AdminProductController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

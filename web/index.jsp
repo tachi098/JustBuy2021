@@ -1,14 +1,4 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:forward page="UserIndexController?view=show"></jsp:forward>
-<!--<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
-        <h1>Hello World!</h1>
-        <a href="UserIndexController?view=show">aa</a>
-    </body>
-</html>-->
+
