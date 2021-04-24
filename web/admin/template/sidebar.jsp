@@ -56,7 +56,7 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a href="../widgets.html" class="nav-link">
+                    <a href="AdminBillController?view=showAllBills" class="nav-link">
                         <i class="nav-icon fas fa-file-invoice-dollar"></i>
                         <p>
                             Bill

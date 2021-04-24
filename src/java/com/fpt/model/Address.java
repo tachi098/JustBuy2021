@@ -18,6 +18,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -46,18 +47,22 @@ public class Address implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
     @Size(max = 100)
+    @NotBlank(message = "Please enter address 1!")
     @Column(name = "line1", length = 100)
     private String line1;
     @Size(max = 100)
     @Column(name = "line2", length = 100)
     private String line2;
     @Size(max = 50)
+    @NotBlank(message = "Please enter city!")
     @Column(name = "city", length = 50)
     private String city;
     @Size(max = 50)
+    @NotBlank(message = "Please enter state!")
     @Column(name = "state", length = 50)
     private String state;
     @Size(max = 10)
+    @NotBlank(message = "Please enter zipcode!")
     @Column(name = "zipcode", length = 10)
     private String zipcode;
     @JoinColumn(name = "userId", referencedColumnName = "id")

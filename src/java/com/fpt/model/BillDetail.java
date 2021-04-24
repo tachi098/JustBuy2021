@@ -17,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -28,8 +30,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "BillDetail.findAll", query = "SELECT b FROM BillDetail b"),
+    @NamedQuery(name = "BillDetail.countAmount", query = "SELECT b.billId.id as id, sum(b.productId.price*(100-b.discount)/100*b.quantity) as amount FROM BillDetail b GROUP BY b.billId.id"),
     @NamedQuery(name = "BillDetail.findById", query = "SELECT b FROM BillDetail b WHERE b.id = :id"),
     @NamedQuery(name = "BillDetail.findByQuantity", query = "SELECT b FROM BillDetail b WHERE b.quantity = :quantity"),
+    @NamedQuery(name = "BillDetail.findByBillId", query = "SELECT b FROM BillDetail b WHERE b.billId.id = :id"),
     @NamedQuery(name = "BillDetail.findByDiscount", query = "SELECT b FROM BillDetail b WHERE b.discount = :discount")})
 public class BillDetail implements Serializable {
 
@@ -40,8 +44,9 @@ public class BillDetail implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
     @Column(name = "quantity")
+    @Min(value = 1)
     private Integer quantity;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Min(value = 0)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "discount", precision = 53)
     private Double discount;
     @JoinColumn(name = "billId", referencedColumnName = "id")

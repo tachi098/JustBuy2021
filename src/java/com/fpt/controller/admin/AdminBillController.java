@@ -39,7 +39,8 @@ public class AdminBillController extends HttpServlet {
                         break;
                     case "edit":
                         break;
-                    case "update":
+                    case "updateBill":
+                        updateBill(request, response);
                         break;
                     case "showAllBills":
                         showAllBills(request, response);
@@ -56,14 +57,42 @@ public class AdminBillController extends HttpServlet {
     private void showAllBills(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Query q = em.createNamedQuery("Bill.findAll");
+        Query qAmountList = em.createNamedQuery("BillDetail.countAmount");
+        q.getResultList();
         request.setAttribute("list", q.getResultList());
+        request.setAttribute("listAmount", qAmountList.getResultList());
         request.getRequestDispatcher("admin/page/Bill/show.jsp").forward(request, response);
     }
 
     private void showBillDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
+        Query q = em.createNamedQuery("Bill.findById");
+        q.setParameter("id", id);
+        request.setAttribute("bill", q.getSingleResult());
+        Query qD = em.createNamedQuery("BillDetail.findByBillId");
+        qD.setParameter("id", id);
+        request.setAttribute("billDetail", qD.getResultList());
+        request.getRequestDispatcher("admin/page/Bill/detail.jsp").forward(request, response);
+    }
+    
+    private void updateBill(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Query q = em.createNamedQuery("Bill.findById");
+        q.setParameter("id", id);
+        request.setAttribute("bill", q.getSingleResult());
         
+        Query qD = em.createNamedQuery("BillDetail.findByBillId");
+        qD.setParameter("id", id);
+        request.setAttribute("billDetail", qD.getResultList());
+        
+        Query qU = em.createNamedQuery("Users.findAll");
+        request.setAttribute("listUser", qU.getResultList());
+        
+        Query qP = em.createNamedQuery("Product.findAll");
+        request.setAttribute("listProduct", qP.getResultList());
+        request.getRequestDispatcher("admin/page/Bill/update.jsp").forward(request, response);
     }
     
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

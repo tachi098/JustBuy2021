@@ -61,76 +61,101 @@
                         </div>
                     </div><!-- /.container-fluid -->
                 </section>
-
                 <!-- Main content -->
                 <section class="content">
-                    <div class="container-fluid">
+                    <form action="AdminBillController?view=processUpdate" method="post">
                         <div class="row">
-                            <div class="col-12">
-                                <div class="card">
+                            <div class="col-md-3">
+                                <div class="card card-primary">
                                     <div class="card-header">
-                                        <h3 class="card-title">DataTable with minimal features & hover style</h3>
+                                        <h3 class="card-title">Bill</h3>
+
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <!-- /.card-header -->
                                     <div class="card-body">
-                                        <table id="example2" class="table table-bordered table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Bill Id</th>
-                                                    <th>User Name</th>
-                                                    <th>Purchase Date</th>
-                                                    <th>Amount</th>
-                                                    <th>Status</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>                                         
-                                                <c:forEach items="${list}" var="b">
-                                                    <tr>
-                                                        <td>${b.id}</td>
-                                                        <td>${b.userId.name}</td>
-                                                        <td><fmt:formatDate value="${b.purchaseDate}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
-                                                        <td>
-                                                            #
-                                                        </td>
-                                                        <td>
-                                                            <c:choose>
-                                                                <c:when test="${b.bStatus == 0}">Processing</c:when>
-                                                                <c:when test="${b.bStatus == 1}">Shipping</c:when>
-                                                                <c:when test="${b.bStatus == 2}">Complete</c:when>
-                                                                <c:otherwise>Canceled</c:otherwise>
-                                                            </c:choose>
-                                                        </td>
-                                                        <td>
-                                                            <a href="AdminBillController?view=showBillDetail&id=${b.id}" class="btn btn-info">Detail</a>
-                                                            <c:if test="${b.bStatus == 0}">
-                                                                <a href="AdminBillController?view=updateBill&id=${b.id}" class="btn btn-warning">Update</a>
-                                                            </c:if>
-                                                        </td>
-                                                    </tr>
+                                        <div class="form-group">
+                                            <label for="billId">Bill Id</label>
+                                            <input type="text" id="billId" class="form-control" value="${bill.id}" name="billId">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="userId">User Id</label>
+                                            <select name="userId" >
+                                                <c:forEach items="${listUser}" var="u">
+                                                    <c:choose>
+                                                        <c:when test="${u.id == bill.userId.id}"><option value="${u.id}" selected="true">${u.name}</option></c:when>
+                                                        <c:otherwise><option value="${u.id}">${u.name}</option></c:otherwise>
+                                                    </c:choose> 
                                                 </c:forEach>
-                                            </tbody>
-                                            <tfoot>
+                                            </select>
+                                            <!--<input type="text" id="userId" class="form-control" value="${bill.userId.id}" name="">-->
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="pDate">Purchase Date</label>
+                                            <input type="date" id="pDate" class="form-control" value="<fmt:formatDate value="${bill.purchaseDate}" pattern="yyyy-MM-dd"></fmt:formatDate>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="status">Status</label>
+                                                <select name="status" >
+                                                    <option value="0" selected>Processing</option>
+                                                    <option value="1">Shipping</option>
+                                                    <option value="2">Complete</option>
+                                                    <option value="3">Canceled</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.card -->
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="card card-secondary">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Bill Detail</h3>
+
+                                            <div class="card-tools">
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                        <c:forEach items="${billDetail}" var="b">
+                                            <table>
                                                 <tr>
-                                                    <th>Bill Id</th>
-                                                    <th>User Name</th>
-                                                    <th>Purchase Date</th>
-                                                    <th>Amount</th>
-                                                    <th>Status</th>
-                                                    <th>Action</th>
+                                                    <td><label>Product name</label>
+                                                        <select name="product${b.id}" >
+                                                            <c:forEach items="${listProduct}" var="u">
+                                                                <c:choose>
+                                                                    <c:when test="${u.id == b.productId.id}"><option value="${u.id}" selected="true">${u.name}</option></c:when>
+                                                                    <c:otherwise><option value="${u.id}">${u.name}</option></c:otherwise>
+                                                                </c:choose> 
+                                                            </c:forEach>
+                                                        </select></td>
                                                 </tr>
-                                            </tfoot>
-                                        </table>
+                                                <tr>
+                                                    <td><label>Quantity</label><input type="number" class="form-control" value="${b.quantity}" name="quantity${b.id}"></td>
+                                                    <td><label>Discount</label><input type="number" step="0.1" class="form-control" value="${b.discount}" name="discount${b.id}"></td>
+                                                </tr>
+                                            </table>
+                                        </c:forEach>
                                     </div>
                                     <!-- /.card-body -->
                                 </div>
                                 <!-- /.card -->
                             </div>
-                            <!-- /.col -->
                         </div>
-                        <!-- /.row -->
-                    </div>
-                    <!-- /.container-fluid -->
+
+                        <div class="row">
+                            <div class="col-12">
+                                <a href="AdminBillController?view=showAllBills" class="btn btn-secondary">Back</a>
+                                <input type="submit" value="Save Changes" class="btn btn-success float-right">
+                            </div>
+                        </div>
+                    </form>
                 </section>
                 <!-- /.content -->
             </div>
