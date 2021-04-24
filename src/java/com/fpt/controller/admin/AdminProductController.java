@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +17,6 @@ public class AdminProductController extends HttpServlet {
 
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("JustBuyPU");
     EntityManager em = emf.createEntityManager();
-    ProductServices proServices = new ProductServices();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -52,8 +52,9 @@ public class AdminProductController extends HttpServlet {
 
     private void show(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute("listProduct", proServices.showAll());
-        request.getRequestDispatcher("admin/page/index.jsp").forward(request, response);    
+        Query q = em.createNamedQuery("Product.findAll");
+        request.setAttribute("listProduct", q.getResultList());
+        request.getRequestDispatcher("admin/page/index.jsp").forward(request, response);
     }
 
     @Override

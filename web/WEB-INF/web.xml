@@ -4,9 +4,17 @@
         <servlet-name>AdminUserController</servlet-name>
         <servlet-class>com.fpt.controller.admin.AdminUserController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AdminProductController</servlet-name>
+        <servlet-class>com.fpt.controller.admin.AdminProductController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminUserController</servlet-name>
         <url-pattern>/AdminUserController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminProductController</servlet-name>
+        <url-pattern>/AdminProductController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
