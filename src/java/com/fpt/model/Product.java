@@ -23,7 +23,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -37,13 +36,14 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p"),
-    @NamedQuery(name = "Product.findById", query = "SELECT p FROM Product p WHERE p.id = :id"), 
+    @NamedQuery(name = "Product.findById", query = "SELECT p FROM Product p WHERE p.id = :id"),
+    @NamedQuery(name = "Product.findByStock", query = "SELECT p FROM Product p WHERE p.stock = :stock"),
     @NamedQuery(name = "Product.findByName", query = "SELECT p FROM Product p WHERE p.name = :name"),
     @NamedQuery(name = "Product.findByImage", query = "SELECT p FROM Product p WHERE p.image = :image"),
     @NamedQuery(name = "Product.findByDescription", query = "SELECT p FROM Product p WHERE p.description = :description"),
     @NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price"),
-    @NamedQuery(name = "Product.findByStock", query = "SELECT p FROM Product p WHERE p.stock = :stock"),
-    @NamedQuery(name = "Product.findByLaunchDate", query = "SELECT p FROM Product p WHERE p.launchDate = :launchDate")})
+    @NamedQuery(name = "Product.findByLaunchDate", query = "SELECT p FROM Product p WHERE p.launchDate = :launchDate"),
+    @NamedQuery(name = "Product.findByDeleteDate", query = "SELECT p FROM Product p WHERE p.deleteDate = :deleteDate")})
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,27 +52,20 @@ public class Product implements Serializable {
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
-//    @Column(name = "stored")
-//    private Integer stored;
     @Column(name = "stock")
     private Integer stock;
     @Size(max = 50)
-    @NotBlank(message = "Please enter product name!")
     @Column(name = "name", length = 50)
     private String name;
     @Size(max = 50)
     @Column(name = "image", length = 50)
     private String image;
     @Size(max = 150)
-    @NotBlank(message = "Please enter product description!")
     @Column(name = "description", length = 150)
     private String description;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "price", precision = 53)
     private Double price;
-//    @Size(max = 50)
-//    @Column(name = "stock", length = 50)
-//    private String stock;
     @Column(name = "launchDate")
     @Temporal(TemporalType.DATE)
     private Date launchDate;
@@ -102,6 +95,14 @@ public class Product implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 
     public String getName() {
@@ -136,20 +137,20 @@ public class Product implements Serializable {
         this.price = price;
     }
 
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
-
     public Date getLaunchDate() {
         return launchDate;
     }
 
     public void setLaunchDate(Date launchDate) {
         this.launchDate = launchDate;
+    }
+
+    public Date getDeleteDate() {
+        return deleteDate;
+    }
+
+    public void setDeleteDate(Date deleteDate) {
+        this.deleteDate = deleteDate;
     }
 
     @XmlTransient
@@ -186,14 +187,6 @@ public class Product implements Serializable {
         this.discount = discount;
     }
 
-    public Date getDeleteDate() {
-        return deleteDate;
-    }
-
-    public void setDeleteDate(Date deleteDate) {
-        this.deleteDate = deleteDate;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -218,5 +211,5 @@ public class Product implements Serializable {
     public String toString() {
         return "com.fpt.model.Product[ id=" + id + " ]";
     }
-
+    
 }
