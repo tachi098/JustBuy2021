@@ -1,8 +1,17 @@
 package com.fpt.controller.admin;
 
+import com.fpt.model.Amount;
+import com.fpt.model.Bill;
+import com.fpt.model.BillDetail;
+import com.fpt.model.Product;
+import com.fpt.model.Users;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -37,7 +46,8 @@ public class AdminBillController extends HttpServlet {
                         break;
                     case "delete":
                         break;
-                    case "edit":
+                    case "processUpdateBill":
+                        processUpdateBill(request, response);
                         break;
                     case "updateBill":
                         updateBill(request, response);
@@ -56,9 +66,10 @@ public class AdminBillController extends HttpServlet {
 
     private void showAllBills(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //em.clear();
         Query q = em.createNamedQuery("Bill.findAll");
-        Query qAmountList = em.createNamedQuery("BillDetail.countAmount");
-        q.getResultList();
+        //Query qAmountList = em.createNamedQuery("BillDetail.countAmount");
+        Query qAmountList = em.createNativeQuery("SELECT b.id AS id, sum(p.price*(100-bd.discount)/100*bd.quantity) AS amount FROM Bill b, BillDetail bd, Product p WHERE b.id = bd.billId AND p.id = bd.productId GROUP BY b.id", Amount.class);
         request.setAttribute("list", q.getResultList());
         request.setAttribute("listAmount", qAmountList.getResultList());
         request.getRequestDispatcher("admin/page/Bill/show.jsp").forward(request, response);
@@ -75,26 +86,68 @@ public class AdminBillController extends HttpServlet {
         request.setAttribute("billDetail", qD.getResultList());
         request.getRequestDispatcher("admin/page/Bill/detail.jsp").forward(request, response);
     }
-    
+
     private void updateBill(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         Query q = em.createNamedQuery("Bill.findById");
         q.setParameter("id", id);
         request.setAttribute("bill", q.getSingleResult());
-        
+
         Query qD = em.createNamedQuery("BillDetail.findByBillId");
         qD.setParameter("id", id);
         request.setAttribute("billDetail", qD.getResultList());
-        
+
         Query qU = em.createNamedQuery("Users.findAll");
         request.setAttribute("listUser", qU.getResultList());
-        
+
         Query qP = em.createNamedQuery("Product.findAll");
         request.setAttribute("listProduct", qP.getResultList());
         request.getRequestDispatcher("admin/page/Bill/update.jsp").forward(request, response);
     }
-    
+
+    private void processUpdateBill(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        try {
+            int billId = Integer.parseInt(request.getParameter("billId"));
+            int userId = Integer.parseInt(request.getParameter("userId"));
+            int status = Integer.parseInt(request.getParameter("status"));
+            Date pDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("pDate"));
+            Bill bill = em.find(Bill.class, billId);
+            bill.setUserId(new Users(userId));
+            bill.setPurchaseDate(pDate);
+            bill.setbStatus(status);
+            em.getTransaction().begin();   
+            em.merge(bill);
+            em.getTransaction().commit();
+
+            Query q = em.createNamedQuery("BillDetail.findByBillId");
+            q.setParameter("id", billId);
+            List<BillDetail> list = q.getResultList();
+
+            for (BillDetail b : list) {
+                int productId = Integer.parseInt(request.getParameter("product" + b.getId()));
+                int quantity = Integer.parseInt(request.getParameter("quantity" + b.getId()));
+                double discount = Double.valueOf(request.getParameter("discount" + b.getId()));
+                BillDetail bd = em.find(BillDetail.class, b.getId());
+
+                bd.setProductId(new Product(productId));
+                bd.setQuantity(quantity);
+                bd.setDiscount(discount);
+                em.getTransaction().begin();
+                em.merge(bd);
+                em.getTransaction().commit();
+            }
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+            em.getTransaction().rollback();
+        }
+
+        //showAllBills(request, response);
+        response.sendRedirect("AdminBillController?view=show");
+    }
+
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

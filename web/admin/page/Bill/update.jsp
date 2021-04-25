@@ -63,7 +63,7 @@
                 </section>
                 <!-- Main content -->
                 <section class="content">
-                    <form action="AdminBillController?view=processUpdate" method="post">
+                    <form action="AdminBillController?view=processUpdateBill" method="post">
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="card card-primary">
@@ -79,7 +79,7 @@
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label for="billId">Bill Id</label>
-                                            <input type="text" id="billId" class="form-control" value="${bill.id}" name="billId">
+                                            <input type="text" id="billId" class="form-control" value="${bill.id}" name="billId" readonly>
                                         </div>
                                         <div class="form-group">
                                             <label for="userId">User Id</label>
@@ -95,7 +95,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="pDate">Purchase Date</label>
-                                            <input type="date" id="pDate" class="form-control" value="<fmt:formatDate value="${bill.purchaseDate}" pattern="yyyy-MM-dd"></fmt:formatDate>">
+                                            <input type="date" id="pDate" class="form-control" name="pDate" value="<fmt:formatDate value="${bill.purchaseDate}" pattern="yyyy-MM-dd"></fmt:formatDate>">
                                             </div>
                                             <div class="form-group">
                                                 <label for="status">Status</label>
