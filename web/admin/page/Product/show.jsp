@@ -93,8 +93,8 @@
                                                         <td>${product.cateId.name}</td>
                                                         <td>${product.price}</td>
                                                         <td>
-                                                            <a href="ProductController?view=delete" class="btn btn-${product.deleteDate == null ? "success" : "secondary"}">${product.deleteDate == null ? "Active" : "Inactive"}</a>
-                                                            <a class="btn btn-primary" href="ProductController?view=edit">Edit</a>
+                                                            <a href="AdminProductController?view=delete&id=${product.id}" class="btn btn-${product.deleteDate == null ? "success" : "secondary"}">${product.deleteDate == null ? "Active" : "Inactive"}</a>
+                                                            <a class="btn btn-primary" href="AdminProductController?view=edit&id=${product.id}">Edit</a>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
