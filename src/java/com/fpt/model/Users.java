@@ -68,6 +68,9 @@ public class Users implements Serializable {
     private String password;
     @Column(name = "role")
     private int role;
+    @Size(max = 50)
+    @Column(name = "avatar", length = 50)
+    private String avatar;
     @OneToMany(mappedBy = "userId")
     private Collection<Feedback> feedbackCollection;
     @OneToOne(mappedBy = "userId")
@@ -116,6 +119,14 @@ public class Users implements Serializable {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public void setUsername(String username) {
