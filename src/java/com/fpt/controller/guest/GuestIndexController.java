@@ -40,6 +40,9 @@ public class GuestIndexController extends HttpServlet {
                         break;
                     case "update":
                         break;
+                    case "showProduct":
+                        showProduct(request, response);
+                        break;
                     case "show":
                     default:
                         show(request, response);
@@ -69,6 +72,15 @@ public class GuestIndexController extends HttpServlet {
         Query q = em.createNamedQuery("Product.findAll");
         request.setAttribute("productList", q.getResultList());
         request.getRequestDispatcher("guest/index.jsp").forward(request, response);
+
+    }
+    
+    private void showProduct(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        Query q = em.createNamedQuery("Product.findAll");
+        request.setAttribute("productList", q.getResultList());
+        request.getRequestDispatcher("guest/show.jsp").forward(request, response);
 
     }
 

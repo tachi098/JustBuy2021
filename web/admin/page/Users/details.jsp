@@ -49,6 +49,7 @@
                                         <h1>ID: ${users.id} - ${users.name}</h1>
                                     </div>
                                     <div class="card-body d-flex">
+                                        <img src="${empty users.avatar ? 'admin/assets/img/avatar.png' : users.avatar}" width="100" height="100" />
                                         <table class="table table-bordered table-hover w-50">
                                             <tbody>
                                                 <tr>

@@ -60,14 +60,16 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </c:forEach>
-<!--                                    
-                        <!--/ End Single Tab -->
-                       
+                                    </c:forEach>                                
+                                    <!--/ End Single Tab -->
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- End Product Area -->
+            <!-- End Product Area -->
