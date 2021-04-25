@@ -1,4 +1,4 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<jsp:forward page="admin/index.jsp"></jsp:forward>
+<jsp:forward page="GuestIndexController"></jsp:forward>
 
