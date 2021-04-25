@@ -67,7 +67,7 @@ public class Users implements Serializable {
     @Column(name = "password", length = 20)
     private String password;
     @Column(name = "role")
-    private Boolean role;
+    private int role;
     @OneToMany(mappedBy = "userId")
     private Collection<Feedback> feedbackCollection;
     @OneToOne(mappedBy = "userId")
@@ -130,11 +130,11 @@ public class Users implements Serializable {
         this.password = password;
     }
 
-    public Boolean getRole() {
+    public int getRole() {
         return role;
     }
 
-    public void setRole(Boolean role) {
+    public void setRole(int role) {
         this.role = role;
     }
 
