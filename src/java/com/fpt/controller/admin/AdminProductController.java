@@ -5,6 +5,7 @@ import com.fpt.model.Category;
 import com.fpt.model.Discount;
 import com.fpt.model.Image;
 import com.fpt.model.Product;
+import com.fpt.model.Users;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,6 +27,7 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 @MultipartConfig
@@ -39,37 +41,49 @@ public class AdminProductController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
         response.setContentType("text/html;charset=UTF-8");
+        
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/admin");
+        } else {
+            try {
+                String view = request.getParameter("view");
 
-        try {
-            String view = request.getParameter("view");
-
-            if (view == null) {
-                show(request, response);
-            } else {
-                switch (view) {
-                    case "create":
-                        create(request, response);
-                        break;
-                    case "insert":
-                        insert(request, response);
-                        break;
-                    case "delete":
-                        delete(request, response);
-                        break;
-                    case "edit":
-                        edit(request, response);
-                        break;
-                    case "update":
-                        update(request, response);
-                        break;
-                    case "show":
-                    default:
-                        show(request, response);
-                        break;
+                if (view == null) {
+                    show(request, response);
+                } else {
+                    switch (view) {
+                        case "create":
+                            create(request, response);
+                            break;
+                        case "insert":
+                            insert(request, response);
+                            break;
+                        case "delete":
+                            delete(request, response);
+                            break;
+                        case "edit":
+                            edit(request, response);
+                            break;
+                        case "update":
+                            update(request, response);
+                            break;
+                        case "showdeal":
+                            showdeal(request, response);
+                            break;
+                        case "dealdis":
+                            dealdis(request, response);
+                            break;
+                        case "show":
+                        default:
+                            show(request, response);
+                            break;
+                    }
                 }
+            } catch (IOException | ServletException e) {
+                System.out.println(e.getMessage());
             }
-        } catch (IOException | ServletException e) {
-            System.out.println(e.getMessage());
         }
     }
 
@@ -83,7 +97,9 @@ public class AdminProductController extends HttpServlet {
     private void create(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
         Query q = em.createNamedQuery("Category.findAll");
-        request.setAttribute("listCategory", q.getResultList());
+        List<Category> categories = q.getResultList();
+        categories = categories.stream().filter(c -> c.getDeleteDate() == null).collect(Collectors.toList());
+        request.setAttribute("listCategory", categories);
         request.getRequestDispatcher("admin/page/Product/form.jsp").forward(request, response);
     }
 
@@ -158,7 +174,7 @@ public class AdminProductController extends HttpServlet {
         et.begin();
         em.merge(product);
         et.commit();
-        request.getRequestDispatcher("AdminProductController?view=show").forward(request, response);
+        response.sendRedirect("AdminProductController?view=show");
     }
 
     private void edit(HttpServletRequest request, HttpServletResponse response)
@@ -166,7 +182,9 @@ public class AdminProductController extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         Product product = em.find(Product.class, id);
         Query q = em.createNamedQuery("Category.findAll");
-        request.setAttribute("listCategory", q.getResultList());
+        List<Category> categories = q.getResultList();
+        categories = categories.stream().filter(c -> c.getDeleteDate() == null).collect(Collectors.toList());
+        request.setAttribute("listCategory", categories);
         request.setAttribute("product", product);
         request.getRequestDispatcher("admin/page/Product/form.jsp").forward(request, response);
     }
@@ -272,6 +290,35 @@ public class AdminProductController extends HttpServlet {
         em.merge(product);
         em.getTransaction().commit();
         request.getRequestDispatcher("AdminProductController?view=show").forward(request, response);
+    }
+
+    private void showdeal(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date dt;
+        try {
+            dt = sdf.parse(dtf.format(now));
+            request.setAttribute("today", dt);
+        } catch (ParseException ex) {
+            Logger.getLogger(AdminProductController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        Query q = em.createNamedQuery("Discount.findAll");
+        request.setAttribute("listDiscount", q.getResultList());
+        request.getRequestDispatcher("admin/page/Product/showDeal.jsp").forward(request, response);
+    }
+
+    private void dealdis(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Discount dis = em.find(Discount.class, id);
+        dis.setEndDate(null);
+        et.begin();
+        em.merge(dis);
+        et.commit();
+        response.sendRedirect("AdminProductController?view=showdeal");
     }
 
     @Override

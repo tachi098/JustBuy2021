@@ -1,8 +1,9 @@
 package com.fpt.controller.admin;
 
+import com.fpt.model.Category;
 import com.fpt.model.Users;
 import java.io.IOException;
-import java.util.List;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -11,14 +12,12 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@MultipartConfig
-public class AdminUserController extends HttpServlet {
+public class AdminCategoryController extends HttpServlet {
 
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("JustBuyPU");
     EntityManager em = emf.createEntityManager();
@@ -39,11 +38,14 @@ public class AdminUserController extends HttpServlet {
                     show(request, response);
                 } else {
                     switch (view) {
-                        case "status":
-                            status(request, response);
+                        case "create":
+                            create(request, response);
                             break;
-                        case "details":
-                            details(request, response);
+                        case "insert":
+                            insert(request, response);
+                            break;
+                        case "delete":
+                            delete(request, response);
                             break;
                         case "edit":
                             edit(request, response);
@@ -63,55 +65,62 @@ public class AdminUserController extends HttpServlet {
         }
     }
 
-    private void details(HttpServletRequest request, HttpServletResponse response)
+    private void show(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = Integer.valueOf(request.getParameter("id"));
-        Users users = em.find(Users.class, id);
-        request.setAttribute("users", users);
-        request.getRequestDispatcher("admin/page/Users/details.jsp").forward(request, response);
+        Query q = em.createNamedQuery("Category.findAll");
+        request.setAttribute("listCategory", q.getResultList());
+        request.getRequestDispatcher("admin/page/Category/show.jsp").forward(request, response);
+    }
+
+    private void insert(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String name = request.getParameter("name");
+        Category cate = new Category();
+        cate.setName(name);
+        et.begin();
+        em.persist(cate);
+        et.commit();
+        response.sendRedirect("AdminCategoryController?view=show");
+    }
+
+    private void create(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("admin/page/Category/form.jsp").forward(request, response);
+    }
+
+    private void delete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Category cate = em.find(Category.class, id);
+        if (cate.getDeleteDate() == null) {
+            cate.setDeleteDate(new Date());
+        } else {
+            cate.setDeleteDate(null);
+        }
+        et.begin();
+        em.merge(cate);
+        et.commit();
+        response.sendRedirect("AdminCategoryController?view=show");
     }
 
     private void edit(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = Integer.valueOf(request.getParameter("id"));
-        Users users = em.find(Users.class, id);
-        request.setAttribute("users", users);
-        request.getRequestDispatcher("admin/page/Users/form.jsp").forward(request, response);
+        int id = Integer.parseInt(request.getParameter("id"));
+        Category cate = em.find(Category.class, id);
+        request.setAttribute("category", cate);
+        request.getRequestDispatcher("admin/page/Category/form.jsp").forward(request, response);
     }
 
     private void update(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        response.getWriter().print("aaa");
-    }
-
-    private void status(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        int id = Integer.valueOf(request.getParameter("id"));
-        Users users = em.find(Users.class, id);
-
-        int role = users.getRole();
-
-        users.setRole(role == 2 ? 1 : 2);
-
-        try {
-            et.begin();
-            em.merge(users);
-            et.commit();
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-            et.rollback();
-        }
-
-        response.sendRedirect("AdminUserController?view=show");
-    }
-
-    private void show(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        Query query = em.createNamedQuery("Users.findAll");
-        List<Users> listUsers = query.getResultList();
-        request.setAttribute("listUsers", listUsers);
-        request.getRequestDispatcher("admin/page/Users/show.jsp").forward(request, response);
+        int id = Integer.parseInt(request.getParameter("id"));
+        Category cate = em.find(Category.class, id);
+        String name = request.getParameter("name");
+        cate.setName(name);
+        et.begin();
+        em.merge(cate);
+        et.commit();
+        response.sendRedirect("AdminCategoryController?view=show");
     }
 
     @Override
@@ -134,7 +143,9 @@ public class AdminUserController extends HttpServlet {
             et.commit();
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-            et.rollback();
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
         }
     }
 
