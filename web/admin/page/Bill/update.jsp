@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>AdminLTE 3 | DataTables</title>
+        <title>Bill | JustBuy</title>
 
         <!-- Google Font: Source Sans Pro -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -83,7 +83,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="userId">User Id</label>
-                                            <select name="userId" >
+                                            <select name="userId" class="form-control">
                                                 <c:forEach items="${listUser}" var="u">
                                                     <c:choose>
                                                         <c:when test="${u.id == bill.userId.id}"><option value="${u.id}" selected="true">${u.name}</option></c:when>
@@ -99,7 +99,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="status">Status</label>
-                                                <select name="status" >
+                                                <select name="status" class="form-control">
                                                     <option value="0" selected>Processing</option>
                                                     <option value="1">Shipping</option>
                                                     <option value="2">Complete</option>
@@ -127,7 +127,7 @@
                                             <table>
                                                 <tr>
                                                     <td><label>Product name</label>
-                                                        <select name="product${b.id}" >
+                                                        <select name="product${b.id}" class="form-control">
                                                             <c:forEach items="${listProduct}" var="u">
                                                                 <c:choose>
                                                                     <c:when test="${u.id == b.productId.id}"><option value="${u.id}" selected="true">${u.name}</option></c:when>
@@ -137,8 +137,8 @@
                                                         </select></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><label>Quantity</label><input type="number" class="form-control" value="${b.quantity}" name="quantity${b.id}"></td>
-                                                    <td><label>Discount</label><input type="number" step="0.1" class="form-control" value="${b.discount}" name="discount${b.id}"></td>
+                                                    <td><label>Quantity</label><input type="number" class="form-control" value="${b.quantity}" name="quantity${b.id}" min="1" max="100"></td>
+                                                    <td><label>Discount</label><input type="number" step="0.1" class="form-control" value="${b.discount}" name="discount${b.id}" min="0.1"></td>
                                                 </tr>
                                             </table>
                                         </c:forEach>

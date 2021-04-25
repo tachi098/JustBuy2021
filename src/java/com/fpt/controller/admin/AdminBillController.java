@@ -42,10 +42,6 @@ public class AdminBillController extends HttpServlet {
                     case "showBillDetail":
                         showBillDetail(request, response);
                         break;
-                    case "insert":
-                        break;
-                    case "delete":
-                        break;
                     case "processUpdateBill":
                         processUpdateBill(request, response);
                         break;
