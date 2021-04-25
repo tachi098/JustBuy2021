@@ -17,8 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -44,9 +42,8 @@ public class BillDetail implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
     @Column(name = "quantity")
-    @Min(value = 1)
     private Integer quantity;
-    @Min(value = 0)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "discount", precision = 53)
     private Double discount;
     @JoinColumn(name = "billId", referencedColumnName = "id")
@@ -127,5 +124,5 @@ public class BillDetail implements Serializable {
     public String toString() {
         return "com.fpt.model.BillDetail[ id=" + id + " ]";
     }
-    
+
 }

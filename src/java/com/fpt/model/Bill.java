@@ -35,7 +35,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Bill.findAll", query = "SELECT b FROM Bill b"),
     @NamedQuery(name = "Bill.findById", query = "SELECT b FROM Bill b WHERE b.id = :id"),
-    @NamedQuery(name = "Bill.findByPurchaseDate", query = "SELECT b FROM Bill b WHERE b.purchaseDate = :purchaseDate")})
+    @NamedQuery(name = "Bill.findByPurchaseDate", query = "SELECT b FROM Bill b WHERE b.purchaseDate = :purchaseDate"),
+    @NamedQuery(name = "Bill.findByBStatus", query = "SELECT b FROM Bill b WHERE b.bStatus = :bStatus")})
 public class Bill implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -62,16 +63,6 @@ public class Bill implements Serializable {
         this.id = id;
     }
 
-    public Integer getbStatus() {
-        return bStatus;
-    }
-
-    public void setbStatus(Integer bStatus) {
-        this.bStatus = bStatus;
-    }
-
-    
-    
     public Integer getId() {
         return id;
     }
@@ -88,7 +79,13 @@ public class Bill implements Serializable {
         this.purchaseDate = purchaseDate;
     }
 
+    public Integer getbStatus() {
+        return bStatus;
+    }
 
+    public void setbStatus(Integer bStatus) {
+        this.bStatus = bStatus;
+    }
 
     @XmlTransient
     public Collection<BillDetail> getBillDetailCollection() {
