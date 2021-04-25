@@ -52,9 +52,9 @@ public class AdminLoginController extends HttpServlet {
         if (users.size() > 0) {
             Users user = users.get(0);
             HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-            Users u1 = (Users) session.getAttribute("user");
-//            response.getWriter().print(u1.getName());
+            if (user.getRole() == 0) {
+                session.setAttribute("user", user);
+            }
             request.getRequestDispatcher("AdminProductController?view=show").forward(request, response);
         } else {
             response.sendRedirect(request.getContextPath() + "/admin");
