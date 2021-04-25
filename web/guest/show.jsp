@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JustBuy</title>
+        <title>Products</title>
     </head>
 
 
@@ -30,113 +30,8 @@
 
         <%@include file="header.jsp" %>
 
-        <!-- Slider Area -->
-        <section class="hero-slider">
-            <!-- Single Slider -->
-            <div class="single-slider">
-                <div class="container">
-                    <div class="row no-gutters">
-                        <div class="col-lg-9 offset-lg-3 col-12">
-                            <div class="text-inner">
-                                <div class="row">
-                                    <div class="col-lg-7 col-12">
-                                        <div class="hero-text">
-                                            <h1><span>UP TO 30% OFF </span>Laptop Gaming</h1>
-                                            <p>Maboriosam in a nesciung eget magnae <br> dapibus disting tloctio in the find it pereri <br> odiy maboriosm.</p>
-                                            <div class="button">
-                                                <a href="#" class="btn">Shop Now!</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--/ End Single Slider -->
-        </section>
-        <!--/ End Slider Area -->
-
-        <!-- Start Small Banner  -->
-        <section class="small-banner section">
-            <div class="container-fluid">
-                <div class="row">
-                    <!-- Single Banner  -->
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <div class="single-banner">
-                            <img src="https://via.placeholder.com/600x370" alt="#">
-                            <div class="content">
-                                <p>Man's Collectons</p>
-                                <h3>Summer travel <br> collection</h3>
-                                <a href="#">Discover Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /End Single Banner  -->
-                    <!-- Single Banner  -->
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <div class="single-banner">
-                            <img src="https://via.placeholder.com/600x370" alt="#">
-                            <div class="content">
-                                <p>Bag Collectons</p>
-                                <h3>Awesome Bag <br> 2020</h3>
-                                <a href="#">Shop Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /End Single Banner  -->
-                    <!-- Single Banner  -->
-                    <div class="col-lg-4 col-12">
-                        <div class="single-banner tab-height">
-                            <img src="https://via.placeholder.com/600x370" alt="#">
-                            <div class="content">
-                                <p>Flash Sale</p>
-                                <h3>Mid Season <br> Up to <span>40%</span> Off</h3>
-                                <a href="#">Discover Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /End Single Banner  -->
-                </div>
-            </div>
-        </section>
-        <!-- End Small Banner -->
-
         <%@include file="product.jsp" %>
 
-        <!-- Start Midium Banner  -->
-        <section class="midium-banner">
-            <div class="container">
-                <div class="row">
-                    <!-- Single Banner  -->
-                    <div class="col-lg-6 col-md-6 col-12">
-                        <div class="single-banner">
-                            <img src="https://via.placeholder.com/600x370" alt="#">
-                            <div class="content">
-                                <p>Man's Collectons</p>
-                                <h3>Man's items <br>Up to<span> 50%</span></h3>
-                                <a href="#">Shop Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /End Single Banner  -->
-                    <!-- Single Banner  -->
-                    <div class="col-lg-6 col-md-6 col-12">
-                        <div class="single-banner">
-                            <img src="https://via.placeholder.com/600x370" alt="#">
-                            <div class="content">
-                                <p>shoes women</p>
-                                <h3>mid season <br> up to <span>70%</span></h3>
-                                <a href="#" class="btn">Shop Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /End Single Banner  -->
-                </div>
-            </div>
-        </section>
-        <!-- End Midium Banner -->
 
         <!-- Start Shop Home List  -->
         <section class="shop-home-list section">
@@ -336,58 +231,6 @@
         </section>
         <!-- End Shop Home List  -->
 
-        <!-- Start Shop Blog  -->
-        <section class="shop-blog section">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="section-title">
-                            <h2>From Our Blog</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <!-- Start Single Blog  -->
-                        <div class="shop-single-blog">
-                            <img src="https://via.placeholder.com/370x300" alt="#">
-                            <div class="content">
-                                <p class="date">22 July , 2020. Monday</p>
-                                <a href="#" class="title">Sed adipiscing ornare.</a>
-                                <a href="#" class="more-btn">Continue Reading</a>
-                            </div>
-                        </div>
-                        <!-- End Single Blog  -->
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <!-- Start Single Blog  -->
-                        <div class="shop-single-blog">
-                            <img src="https://via.placeholder.com/370x300" alt="#">
-                            <div class="content">
-                                <p class="date">22 July, 2020. Monday</p>
-                                <a href="#" class="title">Man’s Fashion Winter Sale</a>
-                                <a href="#" class="more-btn">Continue Reading</a>
-                            </div>
-                        </div>
-                        <!-- End Single Blog  -->
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <!-- Start Single Blog  -->
-                        <div class="shop-single-blog">
-                            <img src="https://via.placeholder.com/370x300" alt="#">
-                            <div class="content">
-                                <p class="date">22 July, 2020. Monday</p>
-                                <a href="#" class="title">Women Fashion Festive</a>
-                                <a href="#" class="more-btn">Continue Reading</a>
-                            </div>
-                        </div>
-                        <!-- End Single Blog  -->
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- End Shop Blog  -->
-
         <!-- Start Shop Services Area -->
         <section class="shop-services section home">
             <div class="container">
@@ -456,6 +299,9 @@
         </section>
         <!-- End Shop Newsletter -->
 
+        
+
         <%@include file="footer.jsp" %>
+
     </body>
 </html>
