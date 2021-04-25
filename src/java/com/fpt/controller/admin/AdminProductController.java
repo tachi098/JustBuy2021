@@ -2,11 +2,15 @@ package com.fpt.controller.admin;
 
 import com.fpt.files.FileAny;
 import com.fpt.model.Category;
+import com.fpt.model.Discount;
 import com.fpt.model.Image;
 import com.fpt.model.Product;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -14,6 +18,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.servlet.ServletException;
@@ -24,13 +29,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 @MultipartConfig
+@SuppressWarnings("unchecked")
 public class AdminProductController extends HttpServlet {
 
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("JustBuyPU");
     EntityManager em = emf.createEntityManager();
+    EntityTransaction et = em.getTransaction();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ParseException {
         response.setContentType("text/html;charset=UTF-8");
 
         try {
@@ -47,10 +54,13 @@ public class AdminProductController extends HttpServlet {
                         insert(request, response);
                         break;
                     case "delete":
+                        delete(request, response);
                         break;
                     case "edit":
+                        edit(request, response);
                         break;
                     case "update":
+                        update(request, response);
                         break;
                     case "show":
                     default:
@@ -71,7 +81,7 @@ public class AdminProductController extends HttpServlet {
     }
 
     private void create(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ParseException {
         Query q = em.createNamedQuery("Category.findAll");
         request.setAttribute("listCategory", q.getResultList());
         request.getRequestDispatcher("admin/page/Product/form.jsp").forward(request, response);
@@ -99,9 +109,9 @@ public class AdminProductController extends HttpServlet {
             for (int i = 0; i < parts.size(); i++) {
                 String filename = FileAny.upload(request, parts.get(i), "admin/assets/img");
                 product.setImage(filename);
-                em.getTransaction().begin();
+                et.begin();
                 em.persist(product);
-                em.getTransaction().commit();
+                et.commit();
             }
         } else {
             String nameImg = "";
@@ -110,9 +120,9 @@ public class AdminProductController extends HttpServlet {
                     String filename = FileAny.upload(request, parts.get(i), "admin/assets/img");
                     nameImg = filename;
                     product.setImage(filename);
-                    em.getTransaction().begin();
+                    et.begin();
                     em.persist(product);
-                    em.getTransaction().commit();
+                    et.commit();
                 }
             }
             Query q = em.createNamedQuery("Product.findAll");
@@ -128,31 +138,167 @@ public class AdminProductController extends HttpServlet {
                 String filename = FileAny.upload(request, parts.get(j), "admin/assets/img");
                 img.setLink(filename);
                 img.setProductId(findProduct);
-                em.getTransaction().begin();
+                et.begin();
                 em.persist(img);
-                em.getTransaction().commit();
+                et.commit();
             }
         }
+        request.getRequestDispatcher("AdminProductController?view=show").forward(request, response);
+    }
+
+    private void delete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Product product = em.find(Product.class, id);
+        if (product.getDeleteDate() != null) {
+            product.setDeleteDate(null);
+        } else {
+            product.setDeleteDate(new Date());
+        }
+        et.begin();
+        em.merge(product);
+        et.commit();
+        request.getRequestDispatcher("AdminProductController?view=show").forward(request, response);
+    }
+
+    private void edit(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Product product = em.find(Product.class, id);
+        Query q = em.createNamedQuery("Category.findAll");
+        request.setAttribute("listCategory", q.getResultList());
+        request.setAttribute("product", product);
+        request.getRequestDispatcher("admin/page/Product/form.jsp").forward(request, response);
+    }
+
+    private void update(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Product product = em.find(Product.class, id);
+        //Process discount table
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
+        String dt = dtf.format(now);
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(dt));
+        } catch (ParseException ex) {
+            Logger.getLogger(AdminProductController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        String endDate = request.getParameter("endDate");
+        String percent = request.getParameter("percent");
+        if ((!"default".equals(endDate)) && (!"default".equals(percent))) {
+            //Check discount exist
+            Discount discount = new Discount();
+            Query qDis = em.createNamedQuery("Discount.findAll");
+            List<Discount> discs = qDis.getResultList();
+            discs = discs.stream().filter(d -> d.getProductId().getId() == id).collect(Collectors.toList());
+            if (discs.size() == 1) {
+                for (Discount disc : discs) {
+                    discount = disc;
+                }
+            }
+            c.add(Calendar.DATE, Integer.parseInt(endDate));
+            dt = sdf.format(c.getTime());
+            try {
+                Date d2 = sdf.parse(dt);
+                discount.setEndDate(d2);
+            } catch (ParseException ex) {
+                Logger.getLogger(AdminProductController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            discount.setPercents(Double.parseDouble(percent));
+            discount.setProductId(product);
+            et.begin();
+            em.persist(discount);
+            et.commit();
+        }
+        List<Part> parts = request.getParts().stream().filter(part -> "images".equals(part.getName()) && part.getSize() > 0).collect(Collectors.toList());
+        String name = request.getParameter("name");
+        int cateId = Integer.parseInt(request.getParameter("category"));
+        double price = Double.parseDouble(request.getParameter("price"));
+        int stock = Integer.parseInt(request.getParameter("stock"));
+        String description = request.getParameter("description");
+
+        product.setName(name);
+        Category category = em.find(Category.class, cateId);
+        product.setCateId(category);
+        product.setPrice(price);
+        product.setStock(stock);
+        product.setDescription(description);
+        if (parts.size() > 0) {
+            Product prod = em.find(Product.class, id);
+            FileAny.delete(request, prod.getImage());
+            Query q = em.createNamedQuery("Image.findAll");
+            List<Image> listImg = q.getResultList();
+            List<Image> listImgDel = listImg.stream().filter(i -> i.getProductId().getId() == id).collect(Collectors.toList());
+            for (Image image : listImgDel) {
+                FileAny.delete(request, image.getLink());
+                et.begin();
+                em.remove(image);
+                et.commit();
+            }
+            if (parts.size() <= 1) {
+                for (int i = 0; i < parts.size(); i++) {
+                    String filename = FileAny.upload(request, parts.get(i), "admin/assets/img");
+                    product.setImage(filename);
+                    et.begin();
+                    em.persist(product);
+                    et.commit();
+                }
+            } else {
+                for (int i = 0; i < parts.size(); i++) {
+                    if (i == 0) {
+                        String filename = FileAny.upload(request, parts.get(i), "admin/assets/img");
+                        product.setImage(filename);
+                        et.begin();
+                        em.persist(product);
+                        et.commit();
+                    }
+                }
+                for (int j = 1; j < parts.size(); j++) {
+                    Image img = new Image();
+                    String filename = FileAny.upload(request, parts.get(j), "admin/assets/img");
+                    img.setLink(filename);
+                    img.setProductId(prod);
+                    et.begin();
+                    em.persist(img);
+                    et.commit();
+                }
+            }
+        }
+        em.getTransaction().begin();
+        em.merge(product);
+        em.getTransaction().commit();
         request.getRequestDispatcher("AdminProductController?view=show").forward(request, response);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ParseException ex) {
+            Logger.getLogger(AdminProductController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ParseException ex) {
+            Logger.getLogger(AdminProductController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void persist(Object object) {
         try {
-            em.getTransaction().begin();
+            et.begin();
             em.persist(object);
-            em.getTransaction().commit();
+            et.commit();
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
             em.getTransaction().rollback();

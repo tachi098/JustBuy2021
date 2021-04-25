@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -50,7 +51,7 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1>Product Create</h1>
+                                <h1>Product ${empty product ? "Create" : "Edit"}</h1>
                             </div>
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
@@ -63,61 +64,105 @@
                 </section>
                 <!-- Main content -->
                 <section class="content">
-                    <form action="AdminProductController?view=insert" method="post" enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card card-primary">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Product</h3>
+                    <c:if test="${empty product}">
+                        <form action="AdminProductController?view=insert" method="post" enctype="multipart/form-data">
+                        </c:if>
+                        <c:if test="${not empty product}">
+                            <form action="AdminProductController?view=update" method="post" enctype="multipart/form-data">
+                                <input name="id" value="${product.id}" hidden>
+                            </c:if>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-primary">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Product</h3>
 
-                                        <div class="card-tools">
-                                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                                <i class="fas fa-minus"></i>
-                                            </button>
+                                            <div class="card-tools">
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </div>
                                         </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label>Name</label>
+                                                <input type="text" class="form-control" name="name" value="${product.name}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Category</label>
+                                                <select name="category" class="form-control">
+                                                    <c:forEach items="${listCategory}" var="category">
+                                                        <option value="${category.id}" ${product.cateId.id == category.id ? "selected" : ""}>${category.name}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Price</label>
+                                                <input type="text" class="form-control" name="price" value="${product.price}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Stock</label>
+                                                <input type="text" class="form-control" name="stock" value="${product.stock}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Description</label>
+                                                <textarea class="form-control" name="description" rows="4">${product.description == null ? "" : product.description}</textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Images</label>
+                                                <input type="file" class="form-control-file" name="images" multiple>
+                                            </div>
+                                        </div>
+                                        <!-- /.card-body -->
                                     </div>
-                                    <div class="card-body">
-                                        <div class="form-group">
-                                            <label>Name</label>
-                                            <input type="text" class="form-control" name="name">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Category</label>
-                                            <select name="category" >
-                                                <c:forEach items="${listCategory}" var="category">
-                                                    <option value="${category.id}">${category.name}</option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Price</label>
-                                            <input type="text" class="form-control" name="price">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Stock</label>
-                                            <input type="text" class="form-control" name="stock">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Description</label>
-                                            <textarea class="form-control" name="description" rows="4"></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Images</label>
-                                            <input type="file" class="form-control-file" name="images" multiple>
-                                        </div>
-                                    </div>
-                                    <!-- /.card-body -->
+                                    <!-- /.card -->
                                 </div>
-                                <!-- /.card -->
+                                <c:if test="${not empty product}">
+                                    <div class="col-md-12">
+                                        <div class="card card-primary">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Discount</h3>
+
+                                                <div class="card-tools">
+                                                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label>End date</label>
+                                                    <select name="endDate" class="form-control">
+                                                        <option value="default">Select</option>
+                                                        <option value="1">1 day</option>
+                                                        <option value="3">3 days</option>
+                                                        <option value="5">5 days</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Percent</label>
+                                                    <select name="percent" class="form-control" >
+                                                        <option value="default">Select</option>
+                                                        <option value="0.1">10%</option>
+                                                        <option value="0.15">15%</option>
+                                                        <option value="0.2">20%</option>
+                                                        <option value="0.25">25%</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!-- /.card-body -->
+                                        </div>
+                                        <!-- /.card -->
+                                    </div>
+                                </c:if>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <a href="AdminProductController?view=show" class="btn btn-secondary">Back</a>
-                                <input type="submit" value="Save Changes" class="btn btn-success float-right">
+                            <div class="row">
+                                <div class="col-12">
+                                    <a href="AdminProductController?view=show" class="btn btn-secondary">Back</a>
+                                    <input type="submit" value="Save Changes" class="btn btn-success float-right">
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
                 </section>
                 <!-- /.content -->
             </div>
