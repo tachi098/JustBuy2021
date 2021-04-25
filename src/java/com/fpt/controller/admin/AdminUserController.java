@@ -1,5 +1,7 @@
 package com.fpt.controller.admin;
 
+import com.fpt.files.FileAny;
+import com.fpt.model.Address;
 import com.fpt.model.Users;
 import java.io.IOException;
 import java.util.List;
@@ -15,6 +17,7 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 @MultipartConfig
 public class AdminUserController extends HttpServlet {
@@ -76,7 +79,53 @@ public class AdminUserController extends HttpServlet {
     private void update(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        response.getWriter().print("aaa");
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+        Part avatar = request.getPart("avatar");
+        
+        String city = request.getParameter("city");
+        String zipcode = request.getParameter("zipcode");
+        String state = request.getParameter("state");
+        String line1 = request.getParameter("line1");
+        String line2 = request.getParameter("line2");
+        
+        int id = Integer.valueOf(request.getParameter("id"));
+        Users users = em.find(Users.class, id);
+        
+        users.setName(name);
+        users.setEmail(email);
+        users.setPhone(phone);
+        
+        if(!avatar.getSubmittedFileName().isEmpty()) {
+            if(!"admin/assets/img/avatar.png".equals(users.getAvatar())) {
+                FileAny.delete(request, users.getAvatar());
+            }
+            String fileName = FileAny.upload(request, avatar, "admin/assets/img");
+            users.setAvatar(fileName);
+        }
+        
+        Query queryAddress = em.createNativeQuery("SELECT * FROM address WHERE userId = ?", Address.class);
+        queryAddress.setParameter(1, id);
+        Address address = (Address) queryAddress.getSingleResult();
+        
+        address.setLine1(line1);
+        address.setLine2(line2);
+        address.setCity(city);
+        address.setState(state);
+        address.setZipcode(zipcode);
+        
+        try {
+            et.begin();
+            em.merge(users);
+            em.merge(address);
+            et.commit();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+            et.rollback();
+        }
+
+        response.sendRedirect("AdminUserController?view=show");
     }
 
     private void status(HttpServletRequest request, HttpServletResponse response)

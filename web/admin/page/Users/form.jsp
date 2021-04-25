@@ -56,23 +56,26 @@
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label>Name</label>
-                                            <input type="text" class="form-control" name="name" required>
+                                            <input type="text" class="form-control" name="name" value="${users.name}" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Email</label>
-                                            <input type="text" class="form-control" name="email" required pattern="^\w{2,}@\w{2,}(\.\w{2,}){1,2}$">
+                                            <input type="text" class="form-control" name="email" value="${users.email}" required pattern="^\w{2,}@\w{2,}(\.\w{2,}){1,2}$">
                                         </div>
                                         <div class="form-group">
                                             <label>Phone</label>
-                                            <input type="text" class="form-control" name="phone" required pattern="^[\d]{1,}$">
+                                            <input type="text" class="form-control" name="phone" value="${users.phone}" required pattern="^[0-9]{1,}$">
                                         </div>
                                         <div class="form-group">
                                             <label>Username</label>
-                                            <input type="text" class="form-control" name="username" readonly>
+                                            <input type="text" class="form-control" value="${users.username}" name="username" readonly>
                                         </div>
                                         <div class="form-group">
                                             <label>Avatar</label>
-                                            <input type="file" class="form-control-file" name="avatar">
+                                            <input type="file" class="form-control-file" accept="image/*" name="avatar">
+                                        </div>
+                                        <div class="form-group">
+                                            <img src="${empty users.avatar ? 'admin/assets/img/avatar.png' : users.avatar}" width="100" height="100" id="imgAvatar" />
                                         </div>
                                     </div>
                                     <!-- /.card-body -->
@@ -95,23 +98,23 @@
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label>City</label>
-                                            <input type="text" class="form-control" name="city" required>
+                                            <input type="text" class="form-control" value="${users.address.city}" name="city" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Zip Code</label>
-                                            <input type="text" class="form-control" name="zipcode" required pattern="^[\d]{1,}$>
+                                            <input type="text" class="form-control" value="${users.address.zipcode}" name="zipcode" required pattern="^[0-9]{1,}$" />
                                         </div>
                                         <div class="form-group">
                                             <label>State</label>
-                                            <input type="text" class="form-control" name="state" required>
+                                            <input type="text" class="form-control" value="${users.address.state}" name="state" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Address 1</label>
-                                            <input type="text" class="form-control" name="line1" required>
+                                            <input type="text" class="form-control" value="${users.address.line1}" name="line1" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Address 2</label>
-                                            <input type="text" class="form-control" name="line2">
+                                            <input type="text" class="form-control" value="${users.address.line2}" name="line2">
                                         </div>
                                     </div>
                                     <!-- /.card-body -->
@@ -142,5 +145,10 @@
 
         <!-- Includes JavaScript -->
         <jsp:include page="../../template/commonJs.jsp"/>
+        <script>
+            document.querySelector('input[type="file"]').onchange = (e) => {
+                document.querySelector("#imgAvatar").src = URL.createObjectURL(e.target.files[0]);
+            };
+        </script>
     </body>
 </html>
