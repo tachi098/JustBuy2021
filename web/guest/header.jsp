@@ -23,7 +23,7 @@
                             <li><i class="ti-location-pin"></i> Store location</li>
                             <li><i class="ti-alarm-clock"></i> <a href="#">Daily deal</a></li>
                             <li><i class="ti-user"></i> <a href="#">My account</a></li>
-                            <li><i class="ti-power-off"></i><a href="login.html#">Login</a></li>
+                            <li><i class="ti-power-off"></i><a href="${pageContext.request.contextPath}/guest/login.jsp">Login</a></li>
                         </ul>
                     </div>
                     <!-- End Top Right -->
@@ -79,7 +79,7 @@
                             <a href="#" class="single-icon"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
                         </div>
                         <div class="sinlge-bar">
-                            <a href="#" class="single-icon"><i class="fa fa-user-circle-o" aria-hidden="true"></i></a>
+                            <a href="${pageContext.request.contextPath}/guest/login.jsp" class="single-icon"><i class="fa fa-user-circle-o" aria-hidden="true"></i></a>
                         </div>
                         <div class="sinlge-bar shopping">
                             <a href="#" class="single-icon"><i class="ti-bag"></i> <span class="total-count">2</span></a>
@@ -108,7 +108,7 @@
                                         <span>Total</span>
                                         <span class="total-amount">$134.00</span>
                                     </div>
-                                    <a href="checkout.html" class="btn animate">Checkout</a>
+                                    <a href="${pageContext.request.contextPath}/guest/checkout.jsp" class="btn animate">Checkout</a>
                                 </div>
                             </div>
                             <!--/ End Shopping Item -->
@@ -130,21 +130,17 @@
                                 <div class="navbar-collapse">	
                                     <div class="nav-inner">	
                                         <ul class="nav main-menu menu navbar-nav">
-                                            <li class="active"><a href="#">Home</a></li>
-                                            <li><a href="#">Product</a></li>												
+                                            <li class="active"><a href="${pageContext.request.contextPath}/guest/index.jsp">Home</a></li>
+                                            <li><a href="${pageContext.request.contextPath}/GuestIndexController?view=showProduct">Product</a></li>												
                                             <li><a href="#">Service</a></li>
                                             <li><a href="#">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
                                                 <ul class="dropdown">
                                                     <li><a href="${pageContext.request.contextPath}/guest/cart.jsp">Cart</a></li>
-                                                    <li><a href="checkout.html">Checkout</a></li>
+                                                    <li><a href="${pageContext.request.contextPath}/guest/checkout.jsp">Checkout</a></li>
                                                 </ul>
                                             </li>
                                             <li><a href="#">Pages</a></li>									
-                                            <li><a href="#">Blog<i class="ti-angle-down"></i></a>
-                                                <ul class="dropdown">
-                                                    <li><a href="blog-single-sidebar.html">Blog Single Sidebar</a></li>
-                                                </ul>
-                                            </li>
+                                            
                                             <li><a href="${pageContext.request.contextPath}/guest/contact.jsp">Contact Us</a></li>
                                         </ul>
                                     </div>
