@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Products | JustBuy</title>
+        <title>Categories | JustBuy</title>
         <jsp:include page="../../template/commonCss.jsp"/>
 
     <body class="hold-transition sidebar-mini">
@@ -28,7 +28,7 @@
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
                                     <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                    <li class="breadcrumb-item active">Products</li>
+                                    <li class="breadcrumb-item active">Categories</li>
                                 </ol>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                                     <div class="card-body">
                                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                             <li class="nav-item">
-                                                <a class="nav-link active" id="pills-list-tab" data-toggle="pill" href="#pills-list" role="tab" aria-controls="pills-list" aria-selected="true">Products</a>
+                                                <a class="nav-link active" id="pills-list-tab" data-toggle="pill" href="#pills-list" role="tab" aria-controls="pills-list" aria-selected="true">Categories</a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link" id="pills-disable-tab" data-toggle="pill" href="#pills-disable" role="tab" aria-controls="pills-disable" aria-selected="false">Status</a>
@@ -58,24 +58,20 @@
                                                         <tr>
                                                             <th>Id</th>
                                                             <th>Name</th>
-                                                            <th>Stock</th>
-                                                            <th>Category</th>
-                                                            <th>Price</th>
-                                                            <th>Action</th>
+                                                            <td>Status</td>
+                                                            <td>Action</td>
                                                         </tr>
                                                     </thead>
                                                     <tbody>                                         
-                                                        <c:forEach items="${listProduct}" var="product">
-                                                            <c:if test="${product.deleteDate == null}">
+                                                        <c:forEach items="${listCategory}" var="category">
+                                                            <c:if test="${category.deleteDate == null}">
                                                                 <tr>
-                                                                    <td>${product.id}</td>
-                                                                    <td>${product.name}</td>
-                                                                    <td>${product.stock}</td>
-                                                                    <td>${product.cateId.name}</td>
-                                                                    <td>${product.price}</td>
+                                                                    <td>${category.id}</td>
+                                                                    <td>${category.name}</td>
+                                                                    <td><span class="badge badge-success">Enable</span></td>
                                                                     <td>
-                                                                        <a href="AdminProductController?view=delete&id=${product.id}" class="btn btn-danger">Disable</a>
-                                                                        <a class="btn btn-primary" href="AdminProductController?view=edit&id=${product.id}">Edit</a>
+                                                                        <a href="AdminCategoryController?view=delete&id=${category.id}" class="btn btn-danger">Disable</a>
+                                                                        <a href="AdminCategoryController?view=edit&id=${category.id}" class="btn btn-primary">Update</a>
                                                                     </td>
                                                                 </tr>
                                                             </c:if>
@@ -85,10 +81,8 @@
                                                         <tr>
                                                             <th>Id</th>
                                                             <th>Name</th>
-                                                            <th>Stock</th>
-                                                            <th>Category</th>
-                                                            <th>Price</th>
-                                                            <th>Action</th>
+                                                            <td>Status</td>
+                                                            <td>Action</td>
                                                         </tr>
                                                     </tfoot>
                                                 </table>
@@ -99,24 +93,19 @@
                                                         <tr>
                                                             <th>Id</th>
                                                             <th>Name</th>
-                                                            <th>Stock</th>
-                                                            <th>Category</th>
-                                                            <th>Price</th>
-                                                            <th>Action</th>
+                                                            <td>Status</td>
+                                                            <td>Action</td>
                                                         </tr>
                                                     </thead>
                                                     <tbody>                                         
-                                                        <c:forEach items="${listProduct}" var="product">
-                                                            <c:if test="${product.deleteDate != null}">
+                                                        <c:forEach items="${listCategory}" var="category">
+                                                            <c:if test="${category.deleteDate != null}">
                                                                 <tr>
-                                                                    <td>${product.id}</td>
-                                                                    <td>${product.name}</td>
-                                                                    <td>${product.stock}</td>
-                                                                    <td>${product.cateId.name}</td>
-                                                                    <td>${product.price}</td>
+                                                                    <td>${category.id}</td>
+                                                                    <td>${category.name}</td>
+                                                                    <td><span class="badge badge-danger">Disable</span></td>
                                                                     <td>
-                                                                        <a href="AdminProductController?view=delete&id=${product.id}" class="btn btn-success">Enable</a>
-                                                                        <!--<a class="btn btn-primary" href="AdminProductController?view=edit&id=${product.id}">Edit</a>-->
+                                                                        <a href="AdminCategoryController?view=delete&id=${category.id}" class="btn btn-success">Enable</a>
                                                                     </td>
                                                                 </tr>
                                                             </c:if>
@@ -126,10 +115,8 @@
                                                         <tr>
                                                             <th>Id</th>
                                                             <th>Name</th>
-                                                            <th>Stock</th>
-                                                            <th>Category</th>
-                                                            <th>Price</th>
-                                                            <th>Action</th>
+                                                            <td>Status</td>
+                                                            <td>Action</td>
                                                         </tr>
                                                     </tfoot>
                                                 </table>

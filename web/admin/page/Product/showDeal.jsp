@@ -53,29 +53,28 @@
 
                                         <div class="tab-content" id="pills-tabContent">
                                             <div class="tab-pane fade show active" id="pills-list" role="tabpanel" aria-labelledby="pills-list-tab">
-                                                <table id="example1" class="table table-bordered table-hover w-100">
+                                                <table id="example1" class="table table-bordered table-hover">
                                                     <thead>
                                                         <tr>
                                                             <th>Id</th>
-                                                            <th>Name</th>
-                                                            <th>Stock</th>
-                                                            <th>Category</th>
-                                                            <th>Price</th>
+                                                            <th>Product Name</th>
+                                                            <th>End Date</th>
+                                                            <th>Discount Percent</th>
+                                                            <th>Status</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>                                         
-                                                        <c:forEach items="${listProduct}" var="product">
-                                                            <c:if test="${product.deleteDate == null}">
+                                                        <c:forEach items="${listDiscount}" var="discount">
+                                                            <c:if test="${discount.endDate > today}">
                                                                 <tr>
-                                                                    <td>${product.id}</td>
-                                                                    <td>${product.name}</td>
-                                                                    <td>${product.stock}</td>
-                                                                    <td>${product.cateId.name}</td>
-                                                                    <td>${product.price}</td>
+                                                                    <td>${discount.id}</td>
+                                                                    <td>${discount.productId.name}</td>
+                                                                    <td><fmt:formatDate value="${discount.endDate}" pattern="yyyy-MM-dd" /></td>
+                                                                    <td>${discount.percents}</td>
+                                                                    <td><span class="badge badge-success">Enable</span></td>
                                                                     <td>
-                                                                        <a href="AdminProductController?view=delete&id=${product.id}" class="btn btn-danger">Disable</a>
-                                                                        <a class="btn btn-primary" href="AdminProductController?view=edit&id=${product.id}">Edit</a>
+                                                                        <a href="AdminProductController?view=dealdis&id=${discount.id}" class="btn btn-danger">Disable</a>
                                                                     </td>
                                                                 </tr>
                                                             </c:if>
@@ -84,10 +83,10 @@
                                                     <tfoot>
                                                         <tr>
                                                             <th>Id</th>
-                                                            <th>Name</th>
-                                                            <th>Stock</th>
-                                                            <th>Category</th>
-                                                            <th>Price</th>
+                                                            <th>Product Name</th>
+                                                            <th>End Date</th>
+                                                            <th>Discount Percent</th>
+                                                            <th>Status</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </tfoot>
@@ -98,26 +97,23 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Id</th>
-                                                            <th>Name</th>
-                                                            <th>Stock</th>
-                                                            <th>Category</th>
-                                                            <th>Price</th>
+                                                            <th>Product Name</th>
+                                                            <th>End Date</th>
+                                                            <th>Discount Percent</th>
+                                                            <th>Status</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>                                         
-                                                        <c:forEach items="${listProduct}" var="product">
-                                                            <c:if test="${product.deleteDate != null}">
+                                                        <c:forEach items="${listDiscount}" var="discount">
+                                                            <c:if test="${discount.endDate < today || discount.endDate == null}">
                                                                 <tr>
-                                                                    <td>${product.id}</td>
-                                                                    <td>${product.name}</td>
-                                                                    <td>${product.stock}</td>
-                                                                    <td>${product.cateId.name}</td>
-                                                                    <td>${product.price}</td>
-                                                                    <td>
-                                                                        <a href="AdminProductController?view=delete&id=${product.id}" class="btn btn-success">Enable</a>
-                                                                        <!--<a class="btn btn-primary" href="AdminProductController?view=edit&id=${product.id}">Edit</a>-->
-                                                                    </td>
+                                                                    <td>${discount.id}</td>
+                                                                    <td>${discount.productId.name}</td>
+                                                                    <td><fmt:formatDate value="${discount.endDate}" pattern="yyyy-MM-dd" /></td>
+                                                                    <td>${discount.percents}</td>
+                                                                    <td><span class="badge badge-danger">Disable</span></td>
+                                                                    <td></td>
                                                                 </tr>
                                                             </c:if>
                                                         </c:forEach>
@@ -125,10 +121,10 @@
                                                     <tfoot>
                                                         <tr>
                                                             <th>Id</th>
-                                                            <th>Name</th>
-                                                            <th>Stock</th>
-                                                            <th>Category</th>
-                                                            <th>Price</th>
+                                                            <th>Product Name</th>
+                                                            <th>End Date</th>
+                                                            <th>Discount Percent</th>
+                                                            <th>Status</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </tfoot>
@@ -136,7 +132,7 @@
                                             </div>
                                         </div>
 
-                                        <!-- /.card-body -->
+                                        <!-- /.card-body 
                                     </div>
                                     <!-- /.card -->
                                 </div>

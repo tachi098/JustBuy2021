@@ -17,7 +17,9 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+
 
 @MultipartConfig
 public class AdminUserController extends HttpServlet {
@@ -29,34 +31,39 @@ public class AdminUserController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/admin");
+        } else {
+            try {
+                String view = request.getParameter("view");
 
-        try {
-            String view = request.getParameter("view");
-
-            if (view == null) {
-                show(request, response);
-            } else {
-                switch (view) {
-                    case "status":
-                        status(request, response);
-                        break;
-                    case "details":
-                        details(request, response);
-                        break;
-                    case "edit":
-                        edit(request, response);
-                        break;
-                    case "update":
-                        update(request, response);
-                        break;
-                    case "show":
-                    default:
-                        show(request, response);
-                        break;
+                if (view == null) {
+                    show(request, response);
+                } else {
+                    switch (view) {
+                        case "status":
+                            status(request, response);
+                            break;
+                        case "details":
+                            details(request, response);
+                            break;
+                        case "edit":
+                            edit(request, response);
+                            break;
+                        case "update":
+                            update(request, response);
+                            break;
+                        case "show":
+                        default:
+                            show(request, response);
+                            break;
+                    }
                 }
+            } catch (IOException | ServletException e) {
+                System.out.println(e.getMessage());
             }
-        } catch (IOException | ServletException e) {
-            System.out.println(e.getMessage());
         }
     }
 
@@ -75,10 +82,9 @@ public class AdminUserController extends HttpServlet {
         request.setAttribute("users", users);
         request.getRequestDispatcher("admin/page/Users/form.jsp").forward(request, response);
     }
-    
+
     private void update(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
+            throws ServletException, IOException {        
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");

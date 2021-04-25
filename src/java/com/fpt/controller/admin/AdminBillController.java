@@ -22,6 +22,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class AdminBillController extends HttpServlet {
 
@@ -32,31 +33,37 @@ public class AdminBillController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        try {
-            String view = request.getParameter("view");
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/admin");
+        } else {
+            try {
+                String view = request.getParameter("view");
 
-            if (view == null) {
-                showAllBills(request, response);
-            } else {
-                switch (view) {
-                    case "showBillDetail":
-                        showBillDetail(request, response);
-                        break;
-                    case "processUpdateBill":
-                        processUpdateBill(request, response);
-                        break;
-                    case "updateBill":
-                        updateBill(request, response);
-                        break;
-                    case "showAllBills":
-                        showAllBills(request, response);
-                    default:
-                        showAllBills(request, response);
-                        break;
+                if (view == null) {
+                    showAllBills(request, response);
+                } else {
+                    switch (view) {
+                        case "showBillDetail":
+                            showBillDetail(request, response);
+                            break;
+                        case "processUpdateBill":
+                            processUpdateBill(request, response);
+                            break;
+                        case "updateBill":
+                            updateBill(request, response);
+                            break;
+                        case "showAllBills":
+                            showAllBills(request, response);
+                        default:
+                            showAllBills(request, response);
+                            break;
+                    }
                 }
+            } catch (IOException | ServletException e) {
+                System.out.println(e.getMessage());
             }
-        } catch (IOException | ServletException e) {
-            System.out.println(e.getMessage());
         }
     }
 
@@ -114,7 +121,7 @@ public class AdminBillController extends HttpServlet {
             bill.setUserId(new Users(userId));
             bill.setPurchaseDate(pDate);
             bill.setbStatus(status);
-            em.getTransaction().begin();   
+            em.getTransaction().begin();
             em.merge(bill);
             em.getTransaction().commit();
 
