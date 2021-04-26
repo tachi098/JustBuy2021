@@ -43,7 +43,7 @@ public class AdminProductController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession();
-        Users user = (Users) session.getAttribute("user");
+        Users user = (Users) session.getAttribute("userAdmin");
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/admin");
         } else {

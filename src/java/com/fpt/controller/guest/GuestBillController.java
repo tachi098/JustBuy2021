@@ -1,22 +1,18 @@
-package com.fpt.controller.admin;
+package com.fpt.controller.guest;
 
-import com.fpt.model.Users;
 import java.io.IOException;
-import java.util.List;
+import javax.servlet.ServletException;
+import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-public class AdminLoginController extends HttpServlet {
+public class GuestBillController extends HttpServlet {
 
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("JustBuyPU");
     EntityManager em = emf.createEntityManager();
@@ -24,16 +20,28 @@ public class AdminLoginController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
         try {
             String view = request.getParameter("view");
 
             if (view == null) {
-                login(request, response);
+                show(request, response);
             } else {
                 switch (view) {
-                    case "login":
+                    case "create":
+                        break;
+                    case "insert":
+                        break;
+                    case "delete":
+                        break;
+                    case "edit":
+                        break;
+                    case "update":
+                        break;
+                    case "show":
+                        show(request, response);
                     default:
-                        login(request, response);
+                        show(request, response);
                         break;
                 }
             }
@@ -42,37 +50,49 @@ public class AdminLoginController extends HttpServlet {
         }
     }
 
-    private void login(HttpServletRequest request, HttpServletResponse response)
+    private void show(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String name = request.getParameter("name");
-        String pass = request.getParameter("pass");
-        Query q = em.createNamedQuery("Users.findAll");
-        List<Users> users = q.getResultList();
-        users = users.stream().filter(u -> (name.toLowerCase().equals(u.getUsername().toLowerCase())) && (pass.equals(u.getPassword()))).collect(Collectors.toList());
-        if (users.size() > 0) {
-            Users user = users.get(0);
-            HttpSession session = request.getSession();
-            if (user.getRole() == 0) {
-                session.setAttribute("userAdmin", user);
-            }
-            request.getRequestDispatcher("AdminProductController?view=show").forward(request, response);
-        } else {
-            response.sendRedirect(request.getContextPath() + "/admin");
-        }
 
     }
 
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
 
     public void persist(Object object) {
         try {
@@ -82,8 +102,6 @@ public class AdminLoginController extends HttpServlet {
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
             em.getTransaction().rollback();
-        } finally {
-//            em.close();
         }
     }
 

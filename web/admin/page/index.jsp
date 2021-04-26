@@ -1,39 +1,58 @@
-
 <%@page import="com.fpt.model.Users"%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    Users user = (Users) session.getAttribute("userAdmin");
+    if (user != null) {
+        response.sendRedirect(request.getContextPath() + "/AdminProductController?view=show");
+    }
+%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Login | JustBuy</title>
+
         <jsp:include page="../template/commonCss.jsp"/>
-        <%
-            Users user = (Users) session.getAttribute("user");
-            if (user != null) {
-                response.sendRedirect(request.getContextPath() + "/AdminProductController?view=show");
-            }
-        %>
     </head>
-    <body>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>Login Form</h1>
-                </div>
-                <div class="col-md-6">
+    <body class="hold-transition login-page">
+        <div class="login-box">
+            <div class="login-logo">
+                <a href="../../index2.html"><b>Just Buy</b> Admin</a>
+            </div>
+            <!-- /.login-logo -->
+            <div class="card">
+                <div class="card-body login-card-body">
+                    <p class="login-box-msg">Sign in to start your session</p>
+
                     <form action="http://localhost:8080/JustBuy2021/AdminLoginController?view=login" method="POST">
-                        <div class="form-group">
-                            <label>username</label>
-                            <input type="text" required name="name" class="form-control">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Username" name="name">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-user"></span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>password</label>
-                            <input type="password" required name="pass" class="form-control">
+                        <div class="input-group mb-3">
+                            <input type="password" class="form-control" placeholder="Password" name="pass">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-lock"></span>
+                                </div>
+                            </div>
                         </div>
-                        <input type="submit" class="btn btn-primary" value="Submit">
+                        <div class="row">
+                            <div class="col-8">
+                            </div>
+                            <div class="col-4">
+                                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                            </div>
+                        </div>
                     </form>
+
                 </div>
             </div>
-        </div>
+
+            <jsp:include page="../template/commonJs.jsp"/>
     </body>
 </html>
