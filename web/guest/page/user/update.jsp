@@ -1,59 +1,150 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@include file="../../java.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>User | JustBuy</title>
+        <style>
+            #avatar {
+                height: 100px;
+                width: 100px;
+            }
+            #btnEdit {
+                color: #fff;
+                background-color: #28a745;
+                border-color: #28a745;
+                box-shadow: none;
+                float: right;
+            }
+            #btnEdit:hover{
+                opacity: 0.8;
+                background-color: lightskyblue;
+            }
+            .form-group{
+                padding-left: 30px;
+            }
+            label{
+                font-weight: bold;
+                font-size: 1.3em;
+            }
+        </style>
     </head>
-    <body>
-        <h1>Update Profile</h1>
-        <form action="GuestUserController?view=processUpdate" method="post" enctype="multipart/form-data">
-            <table>
-                <tr>
-                    <td>Full name</td>
-                    <td><input type="text" name="name" value="${user.name}"/></td>
-                </tr>
-                <tr>
-                    <td>Email</td>
-                    <td><input type="email" name="email" value="${user.email}"/></td>
-                </tr>
-                <tr>
-                    <td>Phone</td>
-                    <td><input type="text" name="email" value="${user.phone}"/></td>
-                </tr>
-                <tr>
-                    <td>Address 1</td>
-                    <td><input type="text" name="email" value="${user.address.line1}"/></td>
-                </tr>
-                <tr>
-                    <td>Address 2</td>
-                    <td><input type="text" name="email" value="${user.address.line2}"/></td>
-                </tr>
-                <tr>
-                    <td>City</td>
-                    <td><input type="text" readonly name="email" value="${user.address.city}"/></td>
-                </tr>
-                <tr>
-                    <td>State</td>
-                    <td><input type="text" readonly name="email" value="${user.address.state}"/></td>
-                </tr>
-                <tr>
-                    <td>Zipcode</td>
-                    <td><input type="text" readonly name="email" value="${user.address.zipcode}"/></td>
-                </tr>
-                <c:if test="${not empty user.avatar}">
-                    <tr>
-                        <td>Avatar</td>
-                        <td><img src="${pageContext.request.contextPath}/guest/assets/images/user/${user.avatar}"/></td>
-                    </tr>
-                </c:if>
-            </table>
-            <div>
-                <a href="GuestUserController?view=update">Update</a>
-                <span><a href="GuestUserController?view=changePass">Change password</a></span>
+    <body class="js">
+
+        <%@include file="../../header.jsp" %>
+
+
+        <!-- Breadcrumbs -->
+        <div class="breadcrumbs">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="bread-inner">
+                            <ul class="bread-list">
+                                <li><a href="${pageContext.request.contextPath}">Home<i class="ti-arrow-right"></i></a></li>
+                                <li class="active"><a href="${pageContext.request.contextPath}/GuestUserController?view=show">My Account<i class="ti-arrow-right"></i></a></li>
+                                <li class="active"><a href="${pageContext.request.contextPath}/GuestUserController?view=update">Update information</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
+        <!-- End Breadcrumbs -->
+
+        <!-- Start Contact -->
+        <section class="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <!-- /.card-header -->
+                            <div class="card-header" style="background: #00bfff; color: white">
+                                <h1>Update information</h1>
+                            </div>
+                            <div class="card-body">
+                                <form action="${pageContext.request.contextPath}/GuestUserController?view=processUpdate" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="id" value="${user.id}"/>
+                                    <div class="card">
+                                        <!-- /.card-header -->
+                                        <div class="card-header" style="background: #01ff70; color: white">
+                                            <h6>Update user</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="name">Full name</label>
+                                                <input type="text" class="form-control" id="name" name="name" required value="${user.name}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email">Email</label>
+                                                <input type="text" class="form-control" id="email" name="email" required value="${user.email}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="phone">Phone</label>
+                                                <input type="text" class="form-control" id="phone" name="phone" required value="${user.phone}">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Avatar</label>
+                                                <input type="file" class="form-control-file" accept="image/*" name="avatar">
+                                            </div>
+                                            <div class="form-group">
+                                                <img src="${empty user.avatar ? 'admin/assets/img/avatar.png' : user.avatar}" width="100" height="100" id="imgAvatar" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card">
+                                        <!-- /.card-header -->
+                                        <div class="card-header" style="background: #01ff70; color: white">
+                                            <h6>Update address</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="line1">Address 1</label>
+                                                <input type="text" class="form-control" id="line1" name="line1" required value="${user.address.line1}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="line2">Address 2</label>
+                                                <input type="text" class="form-control" id="line2" name="line2" value="${user.address.line2}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="city">City</label>
+                                                <input type="text" class="form-control" id="city" name="city" value="${user.address.city}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="state">State</label>
+                                                <input type="text" class="form-control" id="state" name="state" value="${user.address.state}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="zipcode">Zipcode</label>
+                                                <input type="text" class="form-control" id="zipcode" name="zipcode" value="${user.address.zipcode}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <button type="submit" class="btn btn-primary" style="margin-left: 30px">Submit</button>
+                                </form>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <br/>
+                </div>
+                <!-- /.container-fluid -->
+        </section>
+        <!--/ End Contact -->        
+        <%@include file="../../footer.jsp" %>
+        <script>
+            document.querySelector('input[type="file"]').onchange = (e) => {
+                document.querySelector("#imgAvatar").src = URL.createObjectURL(e.target.files[0]);
+            };
+        </script>
     </body>
 </html>
