@@ -115,7 +115,7 @@
                                                 <td><label>Product name</label><input type="text" class="form-control" value="${b.productId.name}" readonly="true"></td>
                                                 <td><label>Unit price</label><input type="text" class="form-control" value="${b.productId.price}" readonly="true"></td>
                                                 <td><label>Quantity</label><input type="text" class="form-control" value="${b.quantity}" readonly="true"></td>
-                                                <td><label>Discount</label><input type="text" class="form-control" value="${b.discount}%" readonly="true"></td>
+                                                <td><label>Discount</label><input type="text" class="form-control" value="${b.discount}" readonly="true"></td>
                                             </tr>
                                         </table>
                                     </c:forEach>
