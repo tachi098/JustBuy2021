@@ -52,7 +52,7 @@ public class GuestCartController extends HttpServlet {
             System.out.println(e.getMessage());
         }
     }
-    
+
     private void processCheckout(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -61,17 +61,17 @@ public class GuestCartController extends HttpServlet {
             em.getTransaction().begin();
 
             HttpSession session = request.getSession();
-            int userId = ((Users)session.getAttribute("user")).getId();
+            int userId = ((Users) session.getAttribute("user")).getId();
             Users users = em.find(Users.class, userId);
-            
+
             int billID = Integer.valueOf(request.getParameter("billId"));
-            
+
             Bill bill = em.find(Bill.class, billID);
             bill.setbStatus(0);
             em.merge(bill);
-            
-            request.setAttribute("users", users);
 
+            request.setAttribute("users", users);
+            session.removeAttribute("countCart");
             em.getTransaction().commit();
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
@@ -82,7 +82,7 @@ public class GuestCartController extends HttpServlet {
 
         response.sendRedirect("GuestCartController?view=show");
     }
-    
+
     private void checkout(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -92,10 +92,10 @@ public class GuestCartController extends HttpServlet {
 
             int userID = 2;
             Users users = em.find(Users.class, userID);
-            
+
             float subtotal = Float.valueOf(request.getParameter("subtotal"));
             int billId = Integer.valueOf(request.getParameter("billId"));
-            
+
             request.setAttribute("billId", billId);
             request.setAttribute("subtotal", subtotal);
             request.setAttribute("users", users);
@@ -176,10 +176,10 @@ public class GuestCartController extends HttpServlet {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            
+
             // Hard Code ID User
             HttpSession session = request.getSession();
-            int userId = ((Users)session.getAttribute("user")).getId();
+            int userId = ((Users) session.getAttribute("user")).getId();
 
             // Get Bill
             Query queryBill = em.createNativeQuery("SELECT * FROM bill WHERE userId = ? AND bStatus = 4", Bill.class);

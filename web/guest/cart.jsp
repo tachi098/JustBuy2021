@@ -75,6 +75,7 @@
                                 </c:forEach>
                             </tbody>
                         </table>
+
                         <!--/ End Shopping Summery -->
                     </div>
                 </div>
