@@ -18,9 +18,6 @@
 
         <%@include file="header.jsp" %>
 
-        <%@include file="product.jsp" %>
-
-
         <!-- Start Shop Home List  -->
         <section class="shop-home-list section">
             <div class="container">
