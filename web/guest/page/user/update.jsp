@@ -8,28 +8,28 @@
         <title>User | JustBuy</title>
     </head>
     <body>
-        <h1>Your Profile</h1>
-        <form>
+        <h1>Update Profile</h1>
+        <form action="GuestUserController?view=processUpdate" method="post" enctype="multipart/form-data">
             <table>
                 <tr>
                     <td>Full name</td>
-                    <td><input type="text" readonly name="name" value="${user.name}"/></td>
+                    <td><input type="text" name="name" value="${user.name}"/></td>
                 </tr>
                 <tr>
                     <td>Email</td>
-                    <td><input type="text" readonly name="email" value="${user.email}"/></td>
+                    <td><input type="email" name="email" value="${user.email}"/></td>
                 </tr>
                 <tr>
                     <td>Phone</td>
-                    <td><input type="text" readonly name="email" value="${user.phone}"/></td>
+                    <td><input type="text" name="email" value="${user.phone}"/></td>
                 </tr>
                 <tr>
                     <td>Address 1</td>
-                    <td><input type="text" readonly name="email" value="${user.address.line1}"/></td>
+                    <td><input type="text" name="email" value="${user.address.line1}"/></td>
                 </tr>
                 <tr>
                     <td>Address 2</td>
-                    <td><input type="text" readonly name="email" value="${user.address.line2}"/></td>
+                    <td><input type="text" name="email" value="${user.address.line2}"/></td>
                 </tr>
                 <tr>
                     <td>City</td>
