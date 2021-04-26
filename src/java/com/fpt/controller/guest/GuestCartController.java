@@ -2,8 +2,10 @@ package com.fpt.controller.guest;
 
 import com.fpt.model.Bill;
 import com.fpt.model.BillDetail;
+import com.fpt.model.Product;
 import com.fpt.model.Users;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -30,6 +32,8 @@ public class GuestCartController extends HttpServlet {
                 show(request, response);
             } else {
                 switch (view) {
+                    case "add":
+                        break;
                     case "checkout":
                         checkout(request, response);
                         break;
@@ -65,10 +69,26 @@ public class GuestCartController extends HttpServlet {
             Users users = em.find(Users.class, userId);
 
             int billID = Integer.valueOf(request.getParameter("billId"));
-
             Bill bill = em.find(Bill.class, billID);
             bill.setbStatus(0);
             em.merge(bill);
+            
+            Query queryBillDetails = em.createNativeQuery("select * from billDetail where billId = ?", BillDetail.class);
+            List<BillDetail> billDetails = queryBillDetails.getResultList();
+            
+            List<Product> products = new ArrayList<>();
+            
+            for(BillDetail bd : billDetails) {
+                Product product = em.find(Product.class, bd.getProductId().getId());
+                
+               product.setStock(bd.getProductId().getStock() - bd.getQuantity());
+                em.merge(product);
+            }
+            
+//            for(Product p : products) {
+//                p.
+//            }
+            
 
             request.setAttribute("users", users);
             session.removeAttribute("countCart");
@@ -192,7 +212,7 @@ public class GuestCartController extends HttpServlet {
             // Subtotal price(have discount)
             float subTotalDiscount = 0;
             for (BillDetail bd : billDetail) {
-                subTotalDiscount = (float) (subTotalDiscount + bd.getProductId().getPrice() * (100 - bd.getDiscount()) / 100 * bd.getQuantity());
+                subTotalDiscount = (float) (subTotalDiscount + bd.getProductId().getPrice() * (1 - bd.getDiscount()) * bd.getQuantity());
             }
 
             request.setAttribute("bill", bill);
