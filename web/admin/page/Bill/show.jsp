@@ -62,7 +62,7 @@
                                                         <td><fmt:formatDate value="${b.purchaseDate}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
                                                             <td>
                                                             <c:forEach items="${listAmount}" var="l">
-                                                                <c:if test="${l.id == b.id}">${l.amount}</c:if>
+                                                                <c:if test="${l.id == b.id}">$${l.amount}</c:if>
                                                             </c:forEach>
                                                         </td>
                                                         <td>
