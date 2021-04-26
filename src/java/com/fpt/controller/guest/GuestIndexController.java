@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.fpt.model.Product;
+import java.util.List;
 
 public class GuestIndexController extends HttpServlet {
 
@@ -82,12 +83,25 @@ public class GuestIndexController extends HttpServlet {
     private void showProduct(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        Query q = em.createNamedQuery("Product.findAll");
-        request.setAttribute("productList", q.getResultList());
-        request.getRequestDispatcher("guest/show.jsp").forward(request, response);
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            // Get all products
+            Query queryShowProduct = em.createNamedQuery("Product.findAll");
+            List<Product> products = queryShowProduct.getResultList();
+            request.setAttribute("products", products);
+            request.getRequestDispatcher("guest/show.jsp").forward(request, response);
+            em.getTransaction().commit();
+        } catch (IOException | ServletException e) {
+            System.out.println(e.getMessage());
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
+        }
 
     }
-    
+
     private void productDetails(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -100,11 +114,6 @@ public class GuestIndexController extends HttpServlet {
 
         request.getRequestDispatcher("guest/productdetails.jsp").forward(request, response);
 
-    }
-
-    @Override
-    public String getServletInfo() {
-        return "Short description";
     }
 
     public void persist(Object object) {

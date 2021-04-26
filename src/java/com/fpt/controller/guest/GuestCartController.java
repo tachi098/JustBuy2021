@@ -2,11 +2,19 @@ package com.fpt.controller.guest;
 
 import com.fpt.model.Bill;
 import com.fpt.model.BillDetail;
+import com.fpt.model.Discount;
 import com.fpt.model.Product;
 import com.fpt.model.Users;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -32,7 +40,8 @@ public class GuestCartController extends HttpServlet {
                 show(request, response);
             } else {
                 switch (view) {
-                    case "add":
+                    case "addCard":
+                        addCard(request, response);
                         break;
                     case "checkout":
                         checkout(request, response);
@@ -54,6 +63,137 @@ public class GuestCartController extends HttpServlet {
             }
         } catch (IOException | ServletException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    private void addCard(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        EntityManager em = emf.createEntityManager();
+        try {
+            // Get id user
+            int userId = ((Users) session.getAttribute("user")).getId();
+
+            // Get list bills
+            Query queryBills = em.createNativeQuery("SELECT * FROM bill WHERE userId = ? AND bStatus = 4", Bill.class);
+            queryBills.setParameter(1, userId);
+            List<Bill> bills = queryBills.getResultList();
+
+            if (bills.size() > 0) {
+                Bill bill = (Bill) queryBills.getSingleResult();
+
+                int billId = bill.getId();
+                int productId = Integer.valueOf(request.getParameter("productId"));
+
+                Query queryBillDetails = em.createNativeQuery("SELECT * FROM billDetail WHERE productId = ? AND billId = ?", BillDetail.class);
+                queryBillDetails.setParameter(1, productId);
+                queryBillDetails.setParameter(2, billId);
+
+                List<BillDetail> billDetails = queryBillDetails.getResultList();
+
+                if (billDetails.size() > 0) {
+                    BillDetail billDetail = (BillDetail) queryBillDetails.getSingleResult();
+
+                    int newQuantity = billDetail.getQuantity() + 1;
+                    billDetail.setQuantity(newQuantity);
+
+                    em.getTransaction().begin();
+                    em.merge(billDetail);
+                    em.getTransaction().commit();
+                } else {
+                    int newBillId = bill.getId();
+
+                    Product product = em.find(Product.class, productId);
+                    Bill newBill = em.find(Bill.class, newBillId);
+
+                    Query queryDiscount = em.createNativeQuery("SELECT * FROM discount WHERE productId = ?", Discount.class);
+                    queryDiscount.setParameter(1, productId);
+
+                    List<Discount> discounts = queryDiscount.getResultList();
+
+                    Double percent = 0D;
+
+                    if (discounts.size() > 0) {
+
+                        Discount discount = (Discount) queryDiscount.getSingleResult();
+                        percent = discount.getPercents();
+                    }
+
+                    // Create bill details
+                    BillDetail billDetail = new BillDetail();
+                    billDetail.setProductId(product);
+                    billDetail.setBillId(newBill);
+                    billDetail.setQuantity(1);
+                    billDetail.setDiscount(percent);
+
+                    em.getTransaction().begin();
+                    em.persist(billDetail);
+                    em.getTransaction().commit();
+                }
+
+            } else {
+                // Get user
+                Users users = em.find(Users.class, userId);
+                Date purchaseDate = new Date();
+                int status = 4;
+
+                // Create bill
+                Bill bill = new Bill();
+                bill.setUserId(users);
+                bill.setPurchaseDate(purchaseDate);
+                bill.setbStatus(status);
+
+                em.getTransaction().begin();
+                em.persist(bill);
+                em.getTransaction().commit();
+
+                int newBillId = bill.getId();
+                int productId = Integer.valueOf(request.getParameter("productId"));
+
+                Product product = em.find(Product.class, productId);
+                Bill newBill = em.find(Bill.class, newBillId);
+
+                Query queryDiscount = em.createNativeQuery("SELECT * FROM discount WHERE productId = ?", Discount.class);
+                queryDiscount.setParameter(1, productId);
+
+                List<Discount> discounts = queryDiscount.getResultList();
+
+                Double percent = 0D;
+
+                if (discounts.size() > 0) {
+
+                    Discount discount = (Discount) queryDiscount.getSingleResult();
+                    percent = discount.getPercents();
+                }
+
+                // Create bill details
+                BillDetail billDetail = new BillDetail();
+                billDetail.setProductId(product);
+                billDetail.setBillId(newBill);
+                billDetail.setQuantity(1);
+                billDetail.setDiscount(percent);
+
+                em.getTransaction().begin();
+                em.persist(billDetail);
+                em.getTransaction().commit();
+            }
+            
+            int countCart = 0;
+            
+            // Get Bill Details
+            if (bills.size() > 0) {
+                Bill bill = (Bill) queryBills.getSingleResult();
+                List<BillDetail> billDetail = (List<BillDetail>) bill.getBillDetailCollection();
+                countCart = billDetail.stream().map(bd -> bd.getQuantity()).reduce(countCart, Integer::sum);
+            }
+
+            session.setAttribute("countCart", countCart);
+            response.sendRedirect("GuestIndexController?view=show");
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
         }
     }
 
@@ -239,7 +379,7 @@ public class GuestCartController extends HttpServlet {
                 request.setAttribute("subTotal", subTotalDiscount);
                 request.setAttribute("billDetail", billDetail);
             }
-            
+
             em.getTransaction().commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());

@@ -131,12 +131,6 @@
                                             <li class="active"><a href="${pageContext.request.contextPath}/guest/index.jsp">Home</a></li>
                                             <li><a href="${pageContext.request.contextPath}/GuestIndexController?view=showProduct">Product</a></li>												
                                             <li><a href="#">Service</a></li>
-                                            <li><a href="#">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
-                                                <ul class="dropdown">
-                                                    <li><a href="${pageContext.request.contextPath}/guest/cart.jsp">Cart</a></li>
-                                                    <li><a href="${pageContext.request.contextPath}/guest/checkout.jsp">Checkout</a></li>
-                                                </ul>
-                                            </li>
                                             <li><a href="#">Pages</a></li>									
 
                                             <li><a href="${pageContext.request.contextPath}/guest/contact.jsp">Contact Us</a></li>
