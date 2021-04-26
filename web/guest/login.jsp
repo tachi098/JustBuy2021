@@ -101,7 +101,7 @@
         <form action="GuestLoginController?view=process" method="post" class="form-horizontal">
             <div class="row">
                 <div class="col-8 offset-4">
-                    <h2>Sign Up</h2>
+                    <h2>Sign In</h2>
                 </div>	
             </div>			
             <div class="form-group row">

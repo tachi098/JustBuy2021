@@ -87,21 +87,23 @@ public class GuestLoginController extends HttpServlet {
 
                     // Get Bill Details
                     List<BillDetail> billDetail = (List<BillDetail>) bill.getBillDetailCollection();
-                    
+
                     int countCart = 0;
                     for (BillDetail bd : billDetail) {
                         countCart += bd.getQuantity();
                     }
-                    
+
                     session.setAttribute("countCart", countCart);
-                    request.getRequestDispatcher("GuestIndexController?view=show").forward(request, response);
+                    response.sendRedirect("GuestIndexController?view=show");
                 } else {
                     request.setAttribute("error", "not author");
-                    request.getRequestDispatcher("GuestLoginController?view=login").forward(request, response);
+                    request.getRequestDispatcher("guest/login.jsp").forward(request, response);
                 }
+            } else {
+                request.setAttribute("error", "Admin or password is wrong");
+                request.getRequestDispatcher("guest/login.jsp").forward(request, response);
             }
-            request.setAttribute("error", "Admin or password is wrong");
-            request.getRequestDispatcher("GuestLoginController?view=login").forward(request, response);
+
             ez.getTransaction().commit();
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
