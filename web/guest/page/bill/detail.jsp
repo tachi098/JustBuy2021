@@ -42,51 +42,77 @@
                                 <h1>Bill Detail</h1>
                             </div>
                             <div class="card-body" style="padding-left: 30px">
-                                <table id="example2" class="table table-bordered table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Bill Id</th>
-                                            <th>Purchase Date</th>
-                                            <th>Total price</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>                                         
-                                        <c:forEach items="${list}" var="b">
-                                            <c:if test="${b.bStatus != 3 && b.bStatus != 4}">
-                                                <tr>
-                                                    <td>${b.id}</td>
-                                                    <td><fmt:formatDate value="${b.purchaseDate}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
-                                                        <td>
-                                                        <c:forEach items="${listAmount}" var="l">
-                                                            <c:if test="${l.id == b.id}">$${l.amount}</c:if>
+                                <div class="shopping-cart section">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <!-- Shopping Summery -->
+                                                <fmt:setLocale value="en_US" />
+                                                <table class="table shopping-summery">
+                                                    <thead>
+                                                        <tr class="main-hading">
+                                                            <th>PRODUCT</th>
+                                                            <th>NAME</th>
+                                                            <th class="text-center">UNIT PRICE</th>
+                                                            <th class="text-center">QUANTITY</th>
+                                                            <th class="text-center">DISCOUNT</th>
+                                                            <th class="text-center">TOTAL</th> 
+                                                            <th class="text-center"><i class="ti-trash remove-icon"></i></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <c:forEach var="billDetail" items="${billDetail}">
+                                                            <tr>
+                                                                <td class="image" data-title="No"><img src="${billDetail.productId.image}" alt="#"></td>
+                                                                <td class="product-des" data-title="Description" style="text-align: center">
+                                                                    <p class="product-name"><a href="#">${billDetail.productId.name}</a></p>
+                                                                    <p class="product-des">${billDetail.productId.description}</p>
+                                                                </td>
+                                                                <td class="price" data-title="Price"><span><fmt:formatNumber value="${billDetail.productId.price}" type="currency" /></span></td>
+                                                                <td class="qty" data-title="Qty" style="text-align: center"><!-- Input Order -->
+                                                                            ${billDetail.quantity}
+                                                                </td>
+                                                                <td class="discount" data-title="Discount" style="text-align: center"><span>${billDetail.discount * 100}%</span></td>
+                                                                <td class="total-amount" data-title="Total"><span></span><fmt:formatNumber value="${billDetail.productId.price * (100 - billDetail.discount) / 100 * billDetail.quantity}" type="currency" /></td>
+                                                            </tr>
                                                         </c:forEach>
-                                                    </td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${b.bStatus == 0}"><span class="badge badge-primary">Processing</span></c:when>
-                                                            <c:when test="${b.bStatus == 1}"><span class="badge badge-warning">Shipping</span></c:when>
-                                                            <c:when test="${b.bStatus == 2}"><span class="badge badge-success">Complete</span></c:when>
-                                                        </c:choose>
-                                                    </td>
-                                                    <td>
-                                                        <a href="GuestBillController?view=detail&id=${b.id}" class="btn btn-info" style="color: white">Detail</a>
-                                                    </td>
-                                                </tr>
-                                            </c:if>
-                                        </c:forEach>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Bill Id</th>
-                                            <th>Purchase Date</th>
-                                            <th>Amount</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                                                    </tbody>
+                                                </table>
+
+                                                <!--/ End Shopping Summery -->
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <!-- Total Amount -->
+                                                <div class="total-amount">
+                                                    <div class="row">
+                                                        <div class="col-lg-8 col-md-5 col-12">
+                                                            <div class="left">
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-7 col-12">
+                                                            <div class="right">
+                                                                <c:forEach items="${listAmount}" var="l">
+                                                                    <c:if test="${l.id == bill.id}">
+                                                                        <ul>
+                                                                            <li style="font-size: 1.3em; font-weight: bold">Total amount:<span>
+                                                                                    <fmt:formatNumber value="${l.amount}" type="currency" />
+                                                                                </span></li>
+                                                                        </ul>
+                                                                    </c:if>
+                                                                </c:forEach>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--/ End Total Amount -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <!-- /.card-body -->
                         </div>

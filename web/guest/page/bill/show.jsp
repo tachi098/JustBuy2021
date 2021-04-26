@@ -53,13 +53,13 @@
                                     </thead>
                                     <tbody>                                         
                                         <c:forEach items="${list}" var="b">
-                                            <c:if test="${b.bStatus != 3 && b.bStatus != 4}">
+                                            <c:if test="${b.bStatus != 4}">
                                                 <tr>
                                                     <td>${b.id}</td>
                                                     <td><fmt:formatDate value="${b.purchaseDate}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
                                                         <td>
                                                         <c:forEach items="${listAmount}" var="l">
-                                                            <c:if test="${l.id == b.id}">$${l.amount}</c:if>
+                                                            <c:if test="${l.id == b.id}"><fmt:formatNumber value="${l.amount}" type="currency" /></c:if>
                                                         </c:forEach>
                                                     </td>
                                                     <td>
@@ -67,6 +67,7 @@
                                                             <c:when test="${b.bStatus == 0}"><span class="badge badge-primary">Processing</span></c:when>
                                                             <c:when test="${b.bStatus == 1}"><span class="badge badge-warning">Shipping</span></c:when>
                                                             <c:when test="${b.bStatus == 2}"><span class="badge badge-success">Complete</span></c:when>
+                                                            <c:when test="${b.bStatus == 3}"><span class="badge badge-danger">Canceled</span></c:when>
                                                         </c:choose>
                                                     </td>
                                                     <td>
