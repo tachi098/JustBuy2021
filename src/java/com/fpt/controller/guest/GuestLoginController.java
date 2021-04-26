@@ -83,14 +83,17 @@ public class GuestLoginController extends HttpServlet {
 
                     Query queryBill = ez.createNativeQuery("SELECT * FROM bill WHERE userId = ? AND bStatus = 4", Bill.class);
                     queryBill.setParameter(1, user.getId());
-                    Bill bill = (Bill) queryBill.getSingleResult();
-
-                    // Get Bill Details
-                    List<BillDetail> billDetail = (List<BillDetail>) bill.getBillDetailCollection();
+//                    Bill bill = (Bill) queryBill.getSingleResult();
+                    List<Bill> bills = queryBill.getResultList();
 
                     int countCart = 0;
-                    for (BillDetail bd : billDetail) {
-                        countCart += bd.getQuantity();
+                    // Get Bill Details
+                    if (bills.size() > 0) {
+                        Bill bill = (Bill) queryBill.getSingleResult();
+                        List<BillDetail> billDetail = (List<BillDetail>) bill.getBillDetailCollection();
+                        for (BillDetail bd : billDetail) {
+                            countCart += bd.getQuantity();
+                        }
                     }
 
                     session.setAttribute("countCart", countCart);
