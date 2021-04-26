@@ -36,6 +36,10 @@
         <servlet-name>GuestLoginController</servlet-name>
         <servlet-class>com.fpt.controller.guest.GuestLoginController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GuestBillController</servlet-name>
+        <servlet-class>com.fpt.controller.guest.GuestBillController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminUserController</servlet-name>
         <url-pattern>/AdminUserController</url-pattern>
@@ -71,6 +75,10 @@
     <servlet-mapping>
         <servlet-name>GuestLoginController</servlet-name>
         <url-pattern>/GuestLoginController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GuestBillController</servlet-name>
+        <url-pattern>/GuestBillController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
