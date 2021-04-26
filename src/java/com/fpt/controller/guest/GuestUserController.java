@@ -17,6 +17,7 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 @MultipartConfig
@@ -30,6 +31,13 @@ public class GuestUserController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
+        
+        if(user == null){
+            request.getRequestDispatcher("GuestLoginController?view=login").forward(request, response);
+        }
         try {
             String view = request.getParameter("view");
 
@@ -65,19 +73,21 @@ public class GuestUserController extends HttpServlet {
 
     private void show(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int userId = 1;
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
 
-        Users user = em.find(Users.class, userId);
-        request.setAttribute("users", user);
+        Users users = em.find(Users.class, user.getId());
+        request.setAttribute("users", users);
         request.getRequestDispatcher("guest/page/user/show.jsp").forward(request, response);
     }
 
     private void update(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int userId = 1;
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
 
-        Users user = em.find(Users.class, userId);
-        request.setAttribute("user", user);
+        Users users = em.find(Users.class, user.getId());
+        request.setAttribute("user", users);
         request.getRequestDispatcher("guest/page/user/update.jsp").forward(request, response);
     }
 
@@ -136,10 +146,11 @@ public class GuestUserController extends HttpServlet {
 
     private void changePass(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int userId = 1;
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
 
-        Users user = em.find(Users.class, userId);
-        request.setAttribute("users", user);
+        Users users = em.find(Users.class, user.getId());
+        request.setAttribute("users", users);
         request.getRequestDispatcher("guest/page/user/changePass.jsp").forward(request, response);
     }
 
@@ -150,15 +161,15 @@ public class GuestUserController extends HttpServlet {
         String newPass = request.getParameter("newPass");
         String newPass2 = request.getParameter("newPass2");
 
-        String oP = "1";
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
+        Users users = em.find(Users.class, user.getId());
 
-        if (newPass.equals(newPass2) && oP.equals(oldPass)) {
-            int id = 1;
-            Users user = em.find(Users.class, id);
-            user.setPassword(newPass);
+        if (newPass.equals(newPass2) && users.getPassword().equals(oldPass)) {
+            users.setPassword(newPass);
             try {
                 et.begin();
-                em.merge(user);
+                em.merge(users);
                 et.commit();
             } catch (Exception e) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
@@ -166,7 +177,7 @@ public class GuestUserController extends HttpServlet {
             }
             response.sendRedirect("GuestUserController?view=show");
         } else {
-            if (oP == null ? oldPass != null : !oP.equals(oldPass)) {
+            if (users.getPassword() == null ? oldPass != null : !users.getPassword().equals(oldPass)) {
                 request.setAttribute("errorOP", "Old password is incorrect");
             }
             if (newPass == null ? newPass2 != null : !newPass.equals(newPass2)) {
