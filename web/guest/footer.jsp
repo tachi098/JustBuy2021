@@ -77,7 +77,7 @@
                 <div class="row">
                     <div class="col-lg-6 col-12">
                         <div class="left">
-                            <p>Copyright © 2020 <a href="" target="_blank">FPT Aptech HCM</a>  -  All Rights Reserved.</p>
+                            <p>Copyright © 2021 <a href="${pageContext.request.contextPath}" target="_blank">FPT Aptech HCM</a>  -  All Rights Reserved.</p>
                         </div>
                     </div>
                     <div class="col-lg-6 col-12">
