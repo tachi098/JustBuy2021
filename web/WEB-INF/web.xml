@@ -29,6 +29,10 @@
         <servlet-class>com.fpt.controller.admin.AdminLoginController</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>GuestCartController</servlet-name>
+        <servlet-class>com.fpt.controller.guest.GuestCartController</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>AdminFeedbackController</servlet-name>
         <servlet-class>com.fpt.controller.admin.AdminFeedbackController</servlet-class>
     </servlet>
@@ -68,6 +72,10 @@
         <servlet-name>AdminLoginController</servlet-name>
         <url-pattern>/AdminLoginController</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GuestCartController</servlet-name>
+        <url-pattern>/GuestCartController</url-pattern>
+    </servlet-mapping>  
     <servlet-mapping>
         <servlet-name>AdminFeedbackController</servlet-name>
         <url-pattern>/AdminFeedbackController</url-pattern>
