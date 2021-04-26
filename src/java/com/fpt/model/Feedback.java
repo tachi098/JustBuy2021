@@ -20,6 +20,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -33,6 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Feedback.findAll", query = "SELECT f FROM Feedback f"),
     @NamedQuery(name = "Feedback.findById", query = "SELECT f FROM Feedback f WHERE f.id = :id"),
     @NamedQuery(name = "Feedback.findByStatus", query = "SELECT f FROM Feedback f WHERE f.status = :status"),
+    @NamedQuery(name = "Feedback.findByContent", query = "SELECT f FROM Feedback f WHERE f.content = :content"),
     @NamedQuery(name = "Feedback.findByDateCreate", query = "SELECT f FROM Feedback f WHERE f.dateCreate = :dateCreate")})
 public class Feedback implements Serializable {
 
@@ -44,6 +46,9 @@ public class Feedback implements Serializable {
     private Integer id;
     @Column(name = "status")
     private Boolean status;
+    @Size(max = 250)
+    @Column(name = "content", length = 250)
+    private String content;
     @Column(name = "date_create")
     @Temporal(TemporalType.DATE)
     private Date dateCreate;
@@ -72,6 +77,14 @@ public class Feedback implements Serializable {
 
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Date getDateCreate() {
