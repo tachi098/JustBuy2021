@@ -1,4 +1,17 @@
 <%@include file="java.jsp" %> 
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@page import="com.fpt.model.Users"%>
+<%
+    Users user = (Users) session.getAttribute("user");
+    String username = "";
+    if (user != null) {
+        username = user.getName();
+            if ("regis".equals(request.getParameter("view")) || "process".equals(request.getParameter("view")) || "login".equals(request.getParameter("view"))) {
+            response.sendRedirect("GuestIndexController?view=show");
+        }
+    }
+
+%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>        
 <!-- Header -->
 <header class="header shop">
@@ -20,10 +33,20 @@
                     <!-- Top Right -->
                     <div class="right-content">
                         <ul class="list-main">
-                            <li><i class="ti-location-pin"></i> Store location</li>
                             <li><i class="ti-alarm-clock"></i> <a href="#">Daily deal</a></li>
-                            <li><i class="ti-user"></i> <a href="#">My account</a></li>
-                            <li><i class="ti-power-off"></i><a href="${pageContext.request.contextPath}/guest/login.jsp">Login</a></li>
+                                <c:if test="<%= username.length() > 0%>">
+                                <li><i class="ti-user"></i> <a href="#"><%= username%></a></li>
+                                </c:if>
+                                <c:if test="<%= username.length() == 0%>">
+                                <!--<li><i class="ti-user"></i> <a href="#">My Account</a></li>-->
+                                </c:if>
+
+                            <c:if test="<%= username.length() > 0%>">
+                                <li><i class="ti-power-off"></i><a href="GuestLoginController?view=logout">Logout</a></li>
+                                    </c:if>
+                                    <c:if test="<%= username.length() == 0%>">
+                                <li><i class="ti-power-off"></i><a href="GuestLoginController?view=show">Login</a></li>
+                                    </c:if>
                         </ul>
                     </div>
                     <!-- End Top Right -->
@@ -75,12 +98,6 @@
                 <div class="col-lg-2 col-md-3 col-12">
                     <div class="right-bar">
                         <!-- Search Form -->
-                        <div class="sinlge-bar">
-                            <a href="#" class="single-icon"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-                        </div>
-                        <div class="sinlge-bar">
-                            <a href="${pageContext.request.contextPath}/guest/login.jsp" class="single-icon"><i class="fa fa-user-circle-o" aria-hidden="true"></i></a>
-                        </div>
                         <div class="sinlge-bar shopping">
                             <a href="#" class="single-icon"><i class="ti-bag"></i> <span class="total-count">2</span></a>
                             <!-- Shopping Item -->
@@ -140,7 +157,7 @@
                                                 </ul>
                                             </li>
                                             <li><a href="#">Pages</a></li>									
-                                            
+
                                             <li><a href="${pageContext.request.contextPath}/guest/contact.jsp">Contact Us</a></li>
                                         </ul>
                                     </div>

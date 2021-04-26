@@ -1,3 +1,6 @@
+<%@page import="com.fpt.model.Users"%>
+
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="java.jsp" %>
 <%@include file="header.jsp" %>
@@ -95,7 +98,7 @@
 <body>
 
     <div class="signup-form">
-        <form action="" method="post" class="form-horizontal">
+        <form action="GuestLoginController?view=process" method="post" class="form-horizontal">
             <div class="row">
                 <div class="col-8 offset-4">
                     <h2>Sign Up</h2>
@@ -104,17 +107,19 @@
             <div class="form-group row">
                 <label class="col-form-label col-4">Username</label>
                 <div class="col-8">
-                    <input type="text" class="form-control" name="username" required="required">
+                    <input type="text" class="form-control" name="name" required>
                 </div>        	
             </div>
 
             <div class="form-group row">
                 <label class="col-form-label col-4">Password</label>
                 <div class="col-8">
-                    <input type="password" class="form-control" name="password" required="required">
+                    <input type="password" class="form-control" name="pass" required>
                 </div>        	
             </div>
-
+            <c:if test="${not empty error}">
+                <p style="color: red"> ${error} </p>
+            </c:if>
 
             <div class="col-8 offset-4">
 
@@ -124,7 +129,7 @@
 
     </div>	
 
-    <div class="text-center">Dont have an account? <a href="${pageContext.request.contextPath}/guest/registration.jsp">Sign up here</a></div>
+    <div class="text-center">Dont have an account? <a href="GuestLoginController?view=regis">Sign up here</a></div>
 </div>
 </body>
 </html>

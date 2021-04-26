@@ -32,6 +32,10 @@
         <servlet-name>AdminFeedbackController</servlet-name>
         <servlet-class>com.fpt.controller.admin.AdminFeedbackController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GuestLoginController</servlet-name>
+        <servlet-class>com.fpt.controller.guest.GuestLoginController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminUserController</servlet-name>
         <url-pattern>/AdminUserController</url-pattern>
@@ -63,6 +67,10 @@
     <servlet-mapping>
         <servlet-name>AdminFeedbackController</servlet-name>
         <url-pattern>/AdminFeedbackController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GuestLoginController</servlet-name>
+        <url-pattern>/GuestLoginController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
