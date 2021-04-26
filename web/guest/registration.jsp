@@ -94,7 +94,7 @@
 <body>
 
     <div class="signup-form">
-        <form action="" method="post" class="form-horizontal">
+        <form action="GuestLoginController?view=create" method="post" class="form-horizontal">
             <div class="row">
                 <div class="col-8 offset-4">
                     <h2>Sign Up</h2>
@@ -103,7 +103,7 @@
             <div class="form-group row">
                 <label class="col-form-label col-4">Username</label>
                 <div class="col-8">
-                    <input type="text" class="form-control" name="username" required="required">
+                    <input type="text" class="form-control" name="name" required="required">
                 </div>        	
             </div>
             <div class="form-group row">
@@ -115,18 +115,17 @@
             <div class="form-group row">
                 <label class="col-form-label col-4">Password</label>
                 <div class="col-8">
-                    <input type="password" class="form-control" name="password" required="required">
+                    <input type="password" class="form-control" name="pass" required="required">
                 </div>        	
             </div>
             <div class="form-group row">
                 <label class="col-form-label col-4">Confirm Password</label>
                 <div class="col-8">
-                    <input type="password" class="form-control" name="confirm_password" required="required">
+                    <input type="password" class="form-control" name="cfpass" required="required">
                 </div>        	
             </div>
             <div class="form-group row">
                 <div class="col-8 offset-4">
-                    <p><label class="form-check-label"><input type="checkbox" required="required"> I accept the <a href="#">Terms of Use</a> &amp; <a href="#">Privacy Policy</a>.</label></p>
                     <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
                 </div>  
             </div>		      

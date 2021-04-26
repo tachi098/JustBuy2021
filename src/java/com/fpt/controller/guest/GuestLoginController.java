@@ -66,23 +66,33 @@ public class GuestLoginController extends HttpServlet {
             throws ServletException, IOException {
         String name = request.getParameter("name");
         String pass = request.getParameter("pass");
-        Query q = em.createNamedQuery("Users.findAll");
-        List<Users> users = q.getResultList();
-        users = users.stream().filter(u -> name.toLowerCase().equals(u.getUsername().toLowerCase()) && pass.equals(u.getPassword())).collect(Collectors.toList());
-        if (users.size() == 1) {
-            Users user = users.get(0);
-            if (user.getRole() == 1) {
-                HttpSession session = request.getSession();
-                session.setAttribute("user", user);
-                request.getRequestDispatcher("GuestIndexController?view=show").forward(request, response);
-//                response.sendRedirect("GuestIndexController?view=show");
-            } else {
-                request.setAttribute("error", "Admin not author");
-                request.getRequestDispatcher("GuestLoginController?view=login").forward(request, response);
+        EntityManager ez = emf.createEntityManager();
+        try {
+            ez.getTransaction().begin();
+            Query q = ez.createNativeQuery("select * from users", Users.class);
+
+            List<Users> users = (List<Users>) q.getResultList();
+            users = users.stream().filter(u -> name.toLowerCase().equals(u.getUsername().toLowerCase()) && pass.equals(u.getPassword())).collect(Collectors.toList());
+            if (users.size() == 1) {
+                Users user = users.get(0);
+                if (user.getRole() == 1) {
+                    HttpSession session = request.getSession();
+                    session.setAttribute("user", user);
+                    request.getRequestDispatcher("GuestIndexController?view=show").forward(request, response);
+                } else {
+                    request.setAttribute("error", "Admin not author");
+                    request.getRequestDispatcher("GuestLoginController?view=login").forward(request, response);
+                }
             }
+            request.setAttribute("error", "Admin or password is wrong");
+            request.getRequestDispatcher("GuestLoginController?view=login").forward(request, response);
+            ez.getTransaction().commit();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
         }
-        request.setAttribute("error", "Admin or password is wrong");
-        request.getRequestDispatcher("GuestLoginController?view=login").forward(request, response);
     }
 
     private void logout(HttpServletRequest request, HttpServletResponse response)
@@ -98,7 +108,11 @@ public class GuestLoginController extends HttpServlet {
     private void regis(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.getRequestDispatcher("guest/registration.jsp").forward(request, response);
+    }
 
+    private void create(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("guest/registration.jsp").forward(request, response);
     }
 
     @Override
