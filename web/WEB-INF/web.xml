@@ -44,6 +44,14 @@
         <servlet-name>GuestBillController</servlet-name>
         <servlet-class>com.fpt.controller.guest.GuestBillController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AdminDashboardController</servlet-name>
+        <servlet-class>com.fpt.controller.admin.AdminDashboardController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GuestAboutController</servlet-name>
+        <servlet-class>com.fpt.controller.guest.GuestAboutController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminUserController</servlet-name>
         <url-pattern>/AdminUserController</url-pattern>
@@ -75,7 +83,7 @@
     <servlet-mapping>
         <servlet-name>GuestCartController</servlet-name>
         <url-pattern>/GuestCartController</url-pattern>
-    </servlet-mapping>  
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AdminFeedbackController</servlet-name>
         <url-pattern>/AdminFeedbackController</url-pattern>
@@ -87,6 +95,14 @@
     <servlet-mapping>
         <servlet-name>GuestBillController</servlet-name>
         <url-pattern>/GuestBillController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminDashboardController</servlet-name>
+        <url-pattern>/AdminDashboardController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GuestAboutController</servlet-name>
+        <url-pattern>/GuestAboutController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
