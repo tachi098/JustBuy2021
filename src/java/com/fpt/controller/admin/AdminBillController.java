@@ -34,7 +34,7 @@ public class AdminBillController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
-        Users user = (Users) session.getAttribute("user");
+        Users user = (Users) session.getAttribute("userAdmin");
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/admin");
         } else {

@@ -1,4 +1,4 @@
-package com.fpt.controller.admin;
+package com.fpt.controller.guest;
 
 import com.fpt.model.Users;
 import java.io.IOException;
@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.servlet.ServletException;
@@ -16,14 +17,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class AdminLoginController extends HttpServlet {
+public class GuestLoginController extends HttpServlet {
 
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("JustBuyPU");
     EntityManager em = emf.createEntityManager();
+    EntityTransaction et = em.getTransaction();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
+
         try {
             String view = request.getParameter("view");
 
@@ -31,6 +36,15 @@ public class AdminLoginController extends HttpServlet {
                 login(request, response);
             } else {
                 switch (view) {
+                    case "process":
+                        process(request, response);
+                        break;
+                    case "regis":
+                        regis(request, response);
+                        break;
+                    case "logout":
+                        logout(request, response);
+                        break;
                     case "login":
                     default:
                         login(request, response);
@@ -40,25 +54,50 @@ public class AdminLoginController extends HttpServlet {
         } catch (IOException | ServletException e) {
             System.out.println(e.getMessage());
         }
+
     }
 
     private void login(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("guest/login.jsp").forward(request, response);
+    }
+
+    private void process(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String name = request.getParameter("name");
         String pass = request.getParameter("pass");
         Query q = em.createNamedQuery("Users.findAll");
         List<Users> users = q.getResultList();
-        users = users.stream().filter(u -> (name.toLowerCase().equals(u.getUsername().toLowerCase())) && (pass.equals(u.getPassword()))).collect(Collectors.toList());
-        if (users.size() > 0) {
+        users = users.stream().filter(u -> name.toLowerCase().equals(u.getUsername().toLowerCase()) && pass.equals(u.getPassword())).collect(Collectors.toList());
+        if (users.size() == 1) {
             Users user = users.get(0);
-            HttpSession session = request.getSession();
-            if (user.getRole() == 0) {
-                session.setAttribute("userAdmin", user);
+            if (user.getRole() == 1) {
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+                request.getRequestDispatcher("GuestIndexController?view=show").forward(request, response);
+//                response.sendRedirect("GuestIndexController?view=show");
+            } else {
+                request.setAttribute("error", "Admin not author");
+                request.getRequestDispatcher("GuestLoginController?view=login").forward(request, response);
             }
-            request.getRequestDispatcher("AdminProductController?view=show").forward(request, response);
-        } else {
-            response.sendRedirect(request.getContextPath() + "/admin");
         }
+        request.setAttribute("error", "Admin or password is wrong");
+        request.getRequestDispatcher("GuestLoginController?view=login").forward(request, response);
+    }
+
+    private void logout(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
+        if (user != null) {
+            session.removeAttribute("user");
+            request.getRequestDispatcher("GuestIndexController?view=show").forward(request, response);
+        }
+    }
+
+    private void regis(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("guest/registration.jsp").forward(request, response);
 
     }
 
@@ -75,10 +114,11 @@ public class AdminLoginController extends HttpServlet {
     }
 
     public void persist(Object object) {
+
         try {
-            em.getTransaction().begin();
+            et.begin();
             em.persist(object);
-            em.getTransaction().commit();
+            et.commit();
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
             em.getTransaction().rollback();
