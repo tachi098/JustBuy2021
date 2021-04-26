@@ -34,6 +34,18 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
+                        
+                        <h2 style="text-align: center; margin-bottom: 10px; color: red;">
+                            <%
+                                if(session.getAttribute("payment") != null) {
+                            %>
+                                    ${sessionScope.payment}
+                            <%
+                                    session.removeAttribute("payment");
+                                }
+                            %>
+                        </h2>
+                        
                         <!-- Shopping Summery -->
                         <fmt:setLocale value="en_US" />
                         <table class="table shopping-summery">
@@ -60,11 +72,22 @@
                                         <td class="qty" data-title="Qty"><!-- Input Order -->
                                             <div class="input-group" style="width: 150px;">
                                                 <form action="GuestCartController?view=change" class="d-flex" method="post">
+                                                    <input type="hidden" name="productId" value="${billDetail.productId.id}" />
                                                     <input type="hidden" name="billDetailId" value="${billDetail.id}" />
                                                     <input type="number" name="quantity" style="padding: 0;" class="input-number"  data-min="1" data-max="100" min="1" max="100" value="${billDetail.quantity}">
                                                     &nbsp;
                                                     <input type="submit" value="Change"  />
                                                 </form>
+                                                <span style="color: red; font-size: small;">
+                                                    <%
+                                                        if(session.getAttribute("errorQuantity") != null) {
+                                                    %>
+                                                            ${sessionScope.errorQuantity}
+                                                    <%
+                                                            session.removeAttribute("errorQuantity");
+                                                        }
+                                                    %>
+                                                </span>
                                             </div>
                                             <!--/ End Input Order -->
                                         </td>

@@ -72,24 +72,21 @@ public class GuestCartController extends HttpServlet {
             Bill bill = em.find(Bill.class, billID);
             bill.setbStatus(0);
             em.merge(bill);
-            
-            Query queryBillDetails = em.createNativeQuery("select * from billDetail where billId = ?", BillDetail.class);
-            List<BillDetail> billDetails = queryBillDetails.getResultList();
-            
-            List<Product> products = new ArrayList<>();
-            
-            for(BillDetail bd : billDetails) {
-                Product product = em.find(Product.class, bd.getProductId().getId());
-                
-               product.setStock(bd.getProductId().getStock() - bd.getQuantity());
-                em.merge(product);
-            }
-            
-//            for(Product p : products) {
-//                p.
-//            }
-            
 
+            Query queryBillDetails = em.createNativeQuery("select * from billDetail where billId = ?", BillDetail.class);
+            queryBillDetails.setParameter(1, billID);
+            List<BillDetail> billDetails = queryBillDetails.getResultList();
+
+            billDetails.stream().map(bd -> {
+                Product product = em.find(Product.class, bd.getProductId().getId());
+                int stockNew = bd.getProductId().getStock() - bd.getQuantity();
+                product.setStock(stockNew);
+                return product;
+            }).forEachOrdered(product -> {
+                em.merge(product);
+            });
+
+            session.setAttribute("payment", "Payment was successful, many thanks!");
             request.setAttribute("users", users);
             session.removeAttribute("countCart");
             em.getTransaction().commit();
@@ -166,6 +163,7 @@ public class GuestCartController extends HttpServlet {
 
     private void change(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
 
         EntityManager em = emf.createEntityManager();
         try {
@@ -173,11 +171,25 @@ public class GuestCartController extends HttpServlet {
 
             int quantity = Integer.valueOf(request.getParameter("quantity"));
             int billDetailId = Integer.valueOf(request.getParameter("billDetailId"));
+            int productId = Integer.valueOf(request.getParameter("productId"));
 
-            BillDetail billDetail = em.find(BillDetail.class, billDetailId);
-            billDetail.setQuantity(quantity);
+            // Get Product
+            Product product = em.find(Product.class, productId);
 
-            em.persist(billDetail);
+            if (product.getStock() >= quantity) {
+
+                // Get BillDetail
+                BillDetail billDetail = em.find(BillDetail.class, billDetailId);
+                billDetail.setQuantity(quantity);
+
+                em.persist(billDetail);
+
+                response.sendRedirect("GuestCartController?view=show");
+            } else {
+
+                session.setAttribute("errorQuantity", "Stock is not enough!");
+                response.sendRedirect("GuestCartController?view=show");
+            }
 
             em.getTransaction().commit();
         } catch (NumberFormatException e) {
@@ -187,7 +199,6 @@ public class GuestCartController extends HttpServlet {
             em.close();
         }
 
-        response.sendRedirect("GuestCartController?view=show");
     }
 
     private void show(HttpServletRequest request, HttpServletResponse response)
@@ -204,21 +215,31 @@ public class GuestCartController extends HttpServlet {
             // Get Bill
             Query queryBill = em.createNativeQuery("SELECT * FROM bill WHERE userId = ? AND bStatus = 4", Bill.class);
             queryBill.setParameter(1, userId);
-            Bill bill = (Bill) queryBill.getSingleResult();
+            List<Bill> bills = queryBill.getResultList();
 
-            // Get Bill Details
-            List<BillDetail> billDetail = (List<BillDetail>) bill.getBillDetailCollection();
+            if (bills.size() > 0) {
 
-            // Subtotal price(have discount)
-            float subTotalDiscount = 0;
-            for (BillDetail bd : billDetail) {
-                subTotalDiscount = (float) (subTotalDiscount + bd.getProductId().getPrice() * (1 - bd.getDiscount()) * bd.getQuantity());
+                Bill bill = (Bill) queryBill.getSingleResult();
+
+                // Get Bill Details
+                List<BillDetail> billDetail = (List<BillDetail>) bill.getBillDetailCollection();
+
+                // Subtotal price(have discount)
+                float subTotalDiscount = 0;
+                for (BillDetail bd : billDetail) {
+                    subTotalDiscount = (float) (subTotalDiscount + bd.getProductId().getPrice() * (1 - bd.getDiscount()) * bd.getQuantity());
+                }
+
+                // Get count cart
+                int countCart = 0;
+                countCart = billDetail.stream().map(bd -> bd.getQuantity()).reduce(countCart, Integer::sum);
+
+                session.setAttribute("countCart", countCart);
+                request.setAttribute("bill", bill);
+                request.setAttribute("subTotal", subTotalDiscount);
+                request.setAttribute("billDetail", billDetail);
             }
-
-            request.setAttribute("bill", bill);
-            request.setAttribute("subTotal", subTotalDiscount);
-            request.setAttribute("billDetail", billDetail);
-
+            
             em.getTransaction().commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());
