@@ -1,10 +1,6 @@
-<%-- 
-    Document   : cart
-    Created on : Apr 25, 2021, 3:47:56 PM
-    Author     : Natsu
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@include file="java.jsp" %>
 <!DOCTYPE html>
 <html>
@@ -14,19 +10,8 @@
     </head>
     <body class="js">
 
-        <!-- Preloader -->
-        <div class="preloader">
-            <div class="preloader-inner">
-                <div class="preloader-icon">
-                    <span></span>
-                    <span></span>
-                </div>
-            </div>
-        </div>
-        <!-- End Preloader -->
-
         <%@include file="header.jsp" %>
-        
+
         <!-- Breadcrumbs -->
         <div class="breadcrumbs">
             <div class="container">
@@ -50,6 +35,7 @@
                 <div class="row">
                     <div class="col-12">
                         <!-- Shopping Summery -->
+                        <fmt:setLocale value="en_US" />
                         <table class="table shopping-summery">
                             <thead>
                                 <tr class="main-hading">
@@ -57,89 +43,36 @@
                                     <th>NAME</th>
                                     <th class="text-center">UNIT PRICE</th>
                                     <th class="text-center">QUANTITY</th>
+                                    <th class="text-center">DISCOUNT</th>
                                     <th class="text-center">TOTAL</th> 
                                     <th class="text-center"><i class="ti-trash remove-icon"></i></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="image" data-title="No"><img src="https://via.placeholder.com/100x100" alt="#"></td>
-                                    <td class="product-des" data-title="Description">
-                                        <p class="product-name"><a href="#">Women Dress</a></p>
-                                        <p class="product-des">Maboriosam in a tonto nesciung eget  distingy magndapibus.</p>
-                                    </td>
-                                    <td class="price" data-title="Price"><span>$110.00 </span></td>
-                                    <td class="qty" data-title="Qty"><!-- Input Order -->
-                                        <div class="input-group">
-                                            <div class="button minus">
-                                                <button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">
-                                                    <i class="ti-minus"></i>
-                                                </button>
+                                <c:forEach var="billDetail" items="${billDetail}">
+                                    <tr>
+                                        <td class="image" data-title="No"><img src="${billDetail.productId.image}" alt="#"></td>
+                                        <td class="product-des" data-title="Description">
+                                            <p class="product-name"><a href="#">${billDetail.productId.name}</a></p>
+                                            <p class="product-des">${billDetail.productId.description}</p>
+                                        </td>
+                                        <td class="price" data-title="Price"><span><fmt:formatNumber value="${billDetail.productId.price}" type="currency" /></span></td>
+                                        <td class="qty" data-title="Qty"><!-- Input Order -->
+                                            <div class="input-group" style="width: 150px;">
+                                                <form action="GuestCartController?view=change" class="d-flex" method="post">
+                                                    <input type="hidden" name="billDetailId" value="${billDetail.id}" />
+                                                    <input type="number" name="quantity" style="padding: 0;" class="input-number"  data-min="1" data-max="100" min="1" max="100" value="${billDetail.quantity}">
+                                                    &nbsp;
+                                                    <input type="submit" value="Change"  />
+                                                </form>
                                             </div>
-                                            <input type="text" name="quant[1]" class="input-number"  data-min="1" data-max="100" value="1">
-                                            <div class="button plus">
-                                                <button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
-                                                    <i class="ti-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <!--/ End Input Order -->
-                                    </td>
-                                    <td class="total-amount" data-title="Total"><span>$220.88</span></td>
-                                    <td class="action" data-title="Remove"><a href="#"><i class="ti-trash remove-icon"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td class="image" data-title="No"><img src="https://via.placeholder.com/100x100" alt="#"></td>
-                                    <td class="product-des" data-title="Description">
-                                        <p class="product-name"><a href="#">Women Dress</a></p>
-                                        <p class="product-des">Maboriosam in a tonto nesciung eget  distingy magndapibus.</p>
-                                    </td>
-                                    <td class="price" data-title="Price"><span>$110.00 </span></td>
-                                    <td class="qty" data-title="Qty"><!-- Input Order -->
-                                        <div class="input-group">
-                                            <div class="button minus">
-                                                <button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[2]">
-                                                    <i class="ti-minus"></i>
-                                                </button>
-                                            </div>
-                                            <input type="text" name="quant[2]" class="input-number"  data-min="1" data-max="100" value="2">
-                                            <div class="button plus">
-                                                <button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[2]">
-                                                    <i class="ti-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <!--/ End Input Order -->
-                                    </td>
-                                    <td class="total-amount" data-title="Total"><span>$220.88</span></td>
-                                    <td class="action" data-title="Remove"><a href="#"><i class="ti-trash remove-icon"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td class="image" data-title="No"><img src="https://via.placeholder.com/100x100" alt="#"></td>
-                                    <td class="product-des" data-title="Description">
-                                        <p class="product-name"><a href="#">Women Dress</a></p>
-                                        <p class="product-des">Maboriosam in a tonto nesciung eget  distingy magndapibus.</p>
-                                    </td>
-                                    <td class="price" data-title="Price"><span>$110.00 </span></td>
-                                    <td class="qty" data-title="Qty"><!-- Input Order -->
-                                        <div class="input-group">
-                                            <div class="button minus">
-                                                <button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[3]">
-                                                    <i class="ti-minus"></i>
-                                                </button>
-                                            </div>
-                                            <input type="text" name="quant[3]" class="input-number"  data-min="1" data-max="100" value="3">
-                                            <div class="button plus">
-                                                <button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[3]">
-                                                    <i class="ti-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <!--/ End Input Order -->
-                                    </td>
-                                    <td class="total-amount" data-title="Total"><span>$220.88</span></td>
-                                    <td class="action" data-title="Remove"><a href="#"><i class="ti-trash remove-icon"></i></a></td>
-                                </tr>
+                                            <!--/ End Input Order -->
+                                        </td>
+                                        <td class="discount" data-title="Discount"><span>%${billDetail.discount * 100}</span></td>
+                                        <td class="total-amount" data-title="Total"><span></span><fmt:formatNumber value="${billDetail.productId.price * (100 - billDetail.discount) / 100 * billDetail.quantity}" type="currency" /></td>
+                                        <td class="action" data-title="Remove"><a href="GuestCartController?view=remove&billDetailId=${billDetail.id}&billId=${billDetail.billId.id}&productId=${billDetail.productId.id}"><i class="ti-trash remove-icon"></i></a></td>
+                                    </tr>
+                                </c:forEach>
                             </tbody>
                         </table>
                         <!--/ End Shopping Summery -->
@@ -152,28 +85,27 @@
                             <div class="row">
                                 <div class="col-lg-8 col-md-5 col-12">
                                     <div class="left">
-                                        <div class="coupon">
-                                            <form action="#" target="_blank">
-                                                <input name="Coupon" placeholder="Enter Your Coupon">
-                                                <button class="btn">Apply</button>
-                                            </form>
-                                        </div>
-                                        <div class="checkbox">
-                                            <label class="checkbox-inline" for="2"><input name="news" id="2" type="checkbox"> Shipping (+10$)</label>
-                                        </div>
+
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-7 col-12">
                                     <div class="right">
-                                        <ul>
-                                            <li>Cart Subtotal<span>$330.00</span></li>
-                                            <li>Shipping<span>Free</span></li>
-                                            <li>You Save<span>$20.00</span></li>
-                                            <li class="last">You Pay<span>$310.00</span></li>
-                                        </ul>
+                                        <c:if test="${subTotal > 0}">
+                                            <ul>
+                                                <li>You Pay<span>
+                                                        <fmt:formatNumber value="${subTotal}" type="currency" />
+                                                    </span></li>
+                                            </ul>
+                                        </c:if>
                                         <div class="button5">
-                                            <a href="#" class="btn">Checkout</a>
-                                            <a href="#" class="btn">Continue shopping</a>
+                                            <c:if test="${subTotal > 0}">
+                                                <form action="GuestCartController?view=checkout" method="post">
+                                                    <input type="hidden" name="billId" value="${bill.id}" />
+                                                    <input type="hidden" name="subtotal" value="${subTotal}" />
+                                                    <button href="GuestCartController?view=checkout" class="btn">Checkout</button>
+                                                </form>
+                                            </c:if>
+                                            <a href="${pageContext.request.contextPath}" class="btn">Continue shopping</a>
                                         </div>
                                     </div>
                                 </div>
