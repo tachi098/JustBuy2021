@@ -1,5 +1,8 @@
 package com.fpt.controller.guest;
 
+import com.fpt.model.Amount;
+import com.fpt.model.Bill;
+import com.fpt.model.Users;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import java.io.PrintWriter;
@@ -7,20 +10,31 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class GuestBillController extends HttpServlet {
 
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("JustBuyPU");
     EntityManager em = emf.createEntityManager();
+    EntityTransaction et = em.getTransaction();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
+
+        if (user == null) {
+            request.getRequestDispatcher("GuestLoginController?view=login").forward(request, response);
+        }
         try {
             String view = request.getParameter("view");
 
@@ -36,7 +50,8 @@ public class GuestBillController extends HttpServlet {
                         break;
                     case "edit":
                         break;
-                    case "update":
+                    case "detail":
+                        detail(request, response);
                         break;
                     case "show":
                         show(request, response);
@@ -52,7 +67,36 @@ public class GuestBillController extends HttpServlet {
 
     private void show(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
 
+        Query q = em.createNativeQuery("SELECT * from bill b where b.userId = ?", Bill.class);
+        q.setParameter(1, user.getId());
+        Query qAmountList = em.createNativeQuery("SELECT b.id AS id, sum(p.price*(100-bd.discount)/100*bd.quantity) AS amount FROM Bill b, BillDetail bd, Product p WHERE b.id = bd.billId AND p.id = bd.productId GROUP BY b.id", Amount.class);
+        request.setAttribute("list", q.getResultList());
+        request.setAttribute("listAmount", qAmountList.getResultList());
+        request.getRequestDispatcher("guest/page/bill/show.jsp").forward(request, response);
+    }
+
+    private void detail(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        Query q = em.createNamedQuery("Bill.findById");
+        q.setParameter("id", id);
+        Bill bill = (Bill)q.getSingleResult();
+        if(bill.getUserId().getId() != user.getId()){
+            request.getRequestDispatcher("/").forward(request, response);
+        }
+        request.setAttribute("bill", bill);
+        Query qAmountList = em.createNativeQuery("SELECT b.id AS id, sum(p.price*(100-bd.discount)/100*bd.quantity) AS amount FROM Bill b, BillDetail bd, Product p WHERE b.id = bd.billId AND p.id = bd.productId GROUP BY b.id", Amount.class);
+        request.setAttribute("listAmount", qAmountList.getResultList());
+        Query qD = em.createNamedQuery("BillDetail.findByBillId");
+        qD.setParameter("id", id);
+        request.setAttribute("billDetail", qD.getResultList());
+        request.getRequestDispatcher("guest/page/bill/detail.jsp").forward(request, response);
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
