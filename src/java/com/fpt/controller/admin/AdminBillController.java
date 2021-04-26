@@ -27,7 +27,6 @@ import javax.servlet.http.HttpSession;
 public class AdminBillController extends HttpServlet {
 
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("JustBuyPU");
-    EntityManager em = emf.createEntityManager();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -70,48 +69,76 @@ public class AdminBillController extends HttpServlet {
     private void showAllBills(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //em.clear();
-        Query q = em.createNamedQuery("Bill.findAll");
-        //Query qAmountList = em.createNamedQuery("BillDetail.countAmount");
-        Query qAmountList = em.createNativeQuery("SELECT b.id AS id, sum(p.price*(100-bd.discount)/100*bd.quantity) AS amount FROM Bill b, BillDetail bd, Product p WHERE b.id = bd.billId AND p.id = bd.productId GROUP BY b.id", Amount.class);
-        request.setAttribute("list", q.getResultList());
-        request.setAttribute("listAmount", qAmountList.getResultList());
+        EntityManager em = emf.createEntityManager();
+        try {
+            Query q = em.createNamedQuery("Bill.findAll");
+            //Query qAmountList = em.createNamedQuery("BillDetail.countAmount");
+            Query qAmountList = em.createNativeQuery("SELECT b.id AS id, sum(p.price*(100-bd.discount)/100*bd.quantity) AS amount FROM Bill b, BillDetail bd, Product p WHERE b.id = bd.billId AND p.id = bd.productId GROUP BY b.id", Amount.class);
+            request.setAttribute("list", q.getResultList());
+            request.setAttribute("listAmount", qAmountList.getResultList());
+            
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
+        }
         request.getRequestDispatcher("admin/page/Bill/show.jsp").forward(request, response);
+
     }
 
     private void showBillDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        Query q = em.createNamedQuery("Bill.findById");
-        q.setParameter("id", id);
-        request.setAttribute("bill", q.getSingleResult());
-        Query qD = em.createNamedQuery("BillDetail.findByBillId");
-        qD.setParameter("id", id);
-        request.setAttribute("billDetail", qD.getResultList());
+        EntityManager em = emf.createEntityManager();
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            Query q = em.createNamedQuery("Bill.findById");
+            q.setParameter("id", id);
+            request.setAttribute("bill", q.getSingleResult());
+            Query qD = em.createNamedQuery("BillDetail.findByBillId");
+            qD.setParameter("id", id);
+            request.setAttribute("billDetail", qD.getResultList());
+            
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
+        }
         request.getRequestDispatcher("admin/page/Bill/detail.jsp").forward(request, response);
     }
 
     private void updateBill(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        Query q = em.createNamedQuery("Bill.findById");
-        q.setParameter("id", id);
-        request.setAttribute("bill", q.getSingleResult());
+        EntityManager em = emf.createEntityManager();
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            Query q = em.createNamedQuery("Bill.findById");
+            q.setParameter("id", id);
+            request.setAttribute("bill", q.getSingleResult());
 
-        Query qD = em.createNamedQuery("BillDetail.findByBillId");
-        qD.setParameter("id", id);
-        request.setAttribute("billDetail", qD.getResultList());
+            Query qD = em.createNamedQuery("BillDetail.findByBillId");
+            qD.setParameter("id", id);
+            request.setAttribute("billDetail", qD.getResultList());
 
-        Query qU = em.createNamedQuery("Users.findAll");
-        request.setAttribute("listUser", qU.getResultList());
+            Query qU = em.createNamedQuery("Users.findAll");
+            request.setAttribute("listUser", qU.getResultList());
 
-        Query qP = em.createNamedQuery("Product.findAll");
-        request.setAttribute("listProduct", qP.getResultList());
+            Query qP = em.createNamedQuery("Product.findAll");
+            request.setAttribute("listProduct", qP.getResultList());
+            
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
+        }
         request.getRequestDispatcher("admin/page/Bill/update.jsp").forward(request, response);
     }
 
     private void processUpdateBill(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        EntityManager em = emf.createEntityManager();
         try {
             int billId = Integer.parseInt(request.getParameter("billId"));
             int userId = Integer.parseInt(request.getParameter("userId"));
@@ -145,6 +172,8 @@ public class AdminBillController extends HttpServlet {
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
             em.getTransaction().rollback();
+        } finally {
+            em.close();
         }
 
         //showAllBills(request, response);
@@ -191,6 +220,7 @@ public class AdminBillController extends HttpServlet {
     }// </editor-fold>
 
     public void persist(Object object) {
+        EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             em.persist(object);
@@ -198,6 +228,8 @@ public class AdminBillController extends HttpServlet {
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
             em.getTransaction().rollback();
+        } finally {
+            em.close();
         }
     }
 
