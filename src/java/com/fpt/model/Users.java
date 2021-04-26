@@ -18,6 +18,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.servlet.annotation.MultipartConfig;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -26,6 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author Admin
  */
+@MultipartConfig
 @Entity
 @Table(name = "users", catalog = "JustBuyDB", schema = "dbo")
 @XmlRootElement
