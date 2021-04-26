@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.fpt.model.Product;
 
 public class GuestIndexController extends HttpServlet {
 
@@ -39,6 +40,9 @@ public class GuestIndexController extends HttpServlet {
                     case "edit":
                         break;
                     case "update":
+                        break;
+                    case "productDetails":
+                        productDetails(request, response);
                         break;
                     case "showProduct":
                         showProduct(request, response);
@@ -74,13 +78,27 @@ public class GuestIndexController extends HttpServlet {
         request.getRequestDispatcher("guest/index.jsp").forward(request, response);
 
     }
-    
+
     private void showProduct(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         Query q = em.createNamedQuery("Product.findAll");
         request.setAttribute("productList", q.getResultList());
         request.getRequestDispatcher("guest/show.jsp").forward(request, response);
+
+    }
+    
+    private void productDetails(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        Product product = em.find(Product.class, id);
+
+//        response.getWriter().print(product.getImageCollection());
+        request.setAttribute("listImage", product.getImageCollection());
+        request.setAttribute("productDetails", product);
+
+        request.getRequestDispatcher("guest/productdetails.jsp").forward(request, response);
 
     }
 
