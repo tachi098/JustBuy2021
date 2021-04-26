@@ -1,5 +1,7 @@
 package com.fpt.controller.guest;
 
+import com.fpt.model.Bill;
+import com.fpt.model.BillDetail;
 import com.fpt.model.Users;
 import java.io.IOException;
 import java.util.List;
@@ -78,9 +80,23 @@ public class GuestLoginController extends HttpServlet {
                 if (user.getRole() == 1) {
                     HttpSession session = request.getSession();
                     session.setAttribute("user", user);
+
+                    Query queryBill = ez.createNativeQuery("SELECT * FROM bill WHERE userId = ? AND bStatus = 4", Bill.class);
+                    queryBill.setParameter(1, user.getId());
+                    Bill bill = (Bill) queryBill.getSingleResult();
+
+                    // Get Bill Details
+                    List<BillDetail> billDetail = (List<BillDetail>) bill.getBillDetailCollection();
+                    
+                    int countCart = 0;
+                    for (BillDetail bd : billDetail) {
+                        countCart += bd.getQuantity();
+                    }
+                    
+                    session.setAttribute("countCart", countCart);
                     request.getRequestDispatcher("GuestIndexController?view=show").forward(request, response);
                 } else {
-                    request.setAttribute("error", "Admin not author");
+                    request.setAttribute("error", "not author");
                     request.getRequestDispatcher("GuestLoginController?view=login").forward(request, response);
                 }
             }
@@ -89,9 +105,9 @@ public class GuestLoginController extends HttpServlet {
             ez.getTransaction().commit();
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-            em.getTransaction().rollback();
+            ez.getTransaction().rollback();
         } finally {
-            em.close();
+            ez.close();
         }
     }
 
@@ -101,6 +117,7 @@ public class GuestLoginController extends HttpServlet {
         Users user = (Users) session.getAttribute("user");
         if (user != null) {
             session.removeAttribute("user");
+            session.removeAttribute("countCart");
             request.getRequestDispatcher("GuestIndexController?view=show").forward(request, response);
         }
     }
