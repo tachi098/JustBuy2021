@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.fpt.model.Product;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GuestIndexController extends HttpServlet {
 
@@ -73,9 +75,38 @@ public class GuestIndexController extends HttpServlet {
 
     private void show(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        EntityManager ez = emf.createEntityManager();
+        try {
+            ez.getTransaction().begin();
+            Query qNewProducts = ez.createNativeQuery("with abc as (select *, ROW_NUMBER() over (order by id desc) as Row_Int from product where deleteDate is NULL) select * from abc where Row_Int between ? and ? order by id desc ", Product.class);
+            qNewProducts.setParameter(1, 1);
+            qNewProducts.setParameter(2, 4);
+            List<Product> products = qNewProducts.getResultList();
+            request.setAttribute("newProducts", products);
 
-        Query q = em.createNamedQuery("Product.findAll");
-        request.setAttribute("productList", q.getResultList());
+            //Get new Items
+            qNewProducts.setParameter(2, 3);
+            products = qNewProducts.getResultList();
+            request.setAttribute("newItems", products);
+
+            //Get Best Seller
+            Query qBestSeller = ez.createNativeQuery("select p.id from billDetail bd, product p where p.id = bd.productId group by p.id order by SUM(bd.quantity) desc");
+            List<Product> productb = new ArrayList<>();
+            List<Integer> productIds = qBestSeller.getResultList();
+            for (int i = 0; i < 3; i++) {
+                Product product = ez.find(Product.class, productIds.get(i));
+                productb.add(product);
+            }
+            request.setAttribute("bestSeller", productb);
+
+
+            ez.getTransaction().commit();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+            ez.getTransaction().rollback();
+        } finally {
+            ez.close();
+        }
         request.getRequestDispatcher("guest/index.jsp").forward(request, response);
 
     }
@@ -104,16 +135,21 @@ public class GuestIndexController extends HttpServlet {
 
     private void productDetails(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        int id = Integer.parseInt(request.getParameter("id"));
-        Product product = em.find(Product.class, id);
-
-//        response.getWriter().print(product.getImageCollection());
-        request.setAttribute("listImage", product.getImageCollection());
-        request.setAttribute("productDetails", product);
-
+        EntityManager ez = emf.createEntityManager();
+        try {
+            ez.getTransaction().begin();
+            int id = Integer.parseInt(request.getParameter("id"));
+            Product product = ez.find(Product.class, id);
+            request.setAttribute("listImage", product.getImageCollection());
+            request.setAttribute("productDetails", product);
+            ez.getTransaction().commit();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+            ez.getTransaction().rollback();
+        } finally {
+            ez.close();
+        }
         request.getRequestDispatcher("guest/productdetails.jsp").forward(request, response);
-
     }
 
     public void persist(Object object) {

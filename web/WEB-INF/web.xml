@@ -45,6 +45,10 @@
         <servlet-class>com.fpt.controller.guest.GuestBillController</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>GuestContactController</servlet-name>
+        <servlet-class>com.fpt.controller.guest.GuestContactController</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>AdminDashboardController</servlet-name>
         <servlet-class>com.fpt.controller.admin.AdminDashboardController</servlet-class>
     </servlet>
@@ -95,6 +99,10 @@
     <servlet-mapping>
         <servlet-name>GuestBillController</servlet-name>
         <url-pattern>/GuestBillController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GuestContactController</servlet-name>
+        <url-pattern>/GuestContactController</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AdminDashboardController</servlet-name>

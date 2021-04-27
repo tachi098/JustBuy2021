@@ -44,6 +44,9 @@ public class GuestLoginController extends HttpServlet {
                     case "regis":
                         regis(request, response);
                         break;
+                    case "create":
+                        create(request, response);
+                        break;
                     case "logout":
                         logout(request, response);
                         break;
@@ -136,7 +139,33 @@ public class GuestLoginController extends HttpServlet {
 
     private void create(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("guest/registration.jsp").forward(request, response);
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String pass = request.getParameter("pass");
+        String cfpass = request.getParameter("cfpass");
+        Query q = em.createNamedQuery("Users.findAll");
+        List<Users> users = q.getResultList();
+        users = users.stream().filter(u -> name.toLowerCase().equals(u.getUsername().toLowerCase())).collect(Collectors.toList());
+        if (users.size() == 0) {
+            if (pass.equals(cfpass)) {
+                Users user = new Users();
+                user.setUsername(name);
+                user.setEmail(email);
+                user.setPassword(pass);
+                user.setName("UserAccount");
+                user.setRole(1);
+                et.begin();
+                em.persist(user);
+                et.commit();
+                response.sendRedirect("GuestLoginController?view=login");
+            } else {
+                request.setAttribute("errorPass", "password and password confirm not match");
+                request.getRequestDispatcher("guest/registration.jsp").forward(request, response);
+            }
+        } else {
+            request.setAttribute("errorUsername", "username is existed");
+            request.getRequestDispatcher("guest/registration.jsp").forward(request, response);
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page import="com.fpt.model.Users"%>
 <%
+    String view = request.getParameter("view");
     Users user = (Users) session.getAttribute("user");
     String username = "";
     int count = 0;
@@ -14,7 +15,6 @@
             response.sendRedirect("GuestIndexController?view=show");
         }
     }
-
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>        
 <!-- Header -->
@@ -28,7 +28,7 @@
                     <div class="top-left">
                         <ul class="list-main">
                             <li><i class="ti-headphone-alt"></i> +060 (800) 801-582</li>
-                            <li><i class="ti-email"></i> support@shophub.com</li>
+                            <li><i class="ti-email"></i> justbuy@gmail.com</li>
                         </ul>
                     </div>
                     <!--/ End Top Left -->
@@ -37,13 +37,9 @@
                     <!-- Top Right -->
                     <div class="right-content">
                         <ul class="list-main">
-                            <li><i class="ti-alarm-clock"></i> <a href="#">Daily deal</a></li>
                                 <c:if test="<%= username.length() > 0%>">
                                 <li><i class="ti-user"></i> <a href="#"><%= username%></a></li>
                                 </c:if>
-                                <c:if test="<%= username.length() == 0%>">
-                                <!--<li><i class="ti-user"></i> <a href="#">My Account</a></li>-->
-                            </c:if>
 
                             <c:if test="<%= username.length() > 0%>">
                                 <li><i class="ti-power-off"></i><a href="GuestLoginController?view=logout">Logout</a></li>
@@ -65,35 +61,19 @@
                 <div class="col-lg-2 col-md-2 col-12">
                     <!-- Logo -->
                     <div class="logo">
-                        <a href="${pageContext.request.contextPath}/index.jsp"><img src="${pageContext.request.contextPath}/guest/assets/images/logo.png" alt="logo"></a>
+                        <a href="GuestIndexController?view=show"><img src="${pageContext.request.contextPath}/guest/assets/images/logo.png" alt="logo"></a>
                     </div>
                     <!--/ End Logo -->
                     <!-- Search Form -->
-                    <div class="search-top">
-                        <div class="top-search"><a href="#0"><i class="ti-search"></i></a></div>
-                        <!-- Search Form -->
-                        <div class="search-top">
-                            <form class="search-form">
-                                <input type="text" placeholder="Search here..." name="search">
-                                <button value="search" type="submit"><i class="ti-search"></i></button>
-                            </form>
-                        </div>
-                        <!--/ End Search Form -->
-                    </div>
+
                     <!--/ End Search Form -->
                     <div class="mobile-nav"></div>
                 </div>
                 <div class="col-lg-8 col-md-7 col-12">
                     <div class="search-bar-top">
                         <div class="search-bar">
-                            <select>
-                                <option selected="selected">All Category</option>
-                                <option>watch</option>
-                                <option>mobile</option>
-                                <option>kid’s item</option>
-                            </select>
                             <form>
-                                <input name="search" placeholder="Search Products Here....." type="search">
+                                <input style="width: 450px"  name="search" placeholder="Search Products Here....." type="search">
                                 <button class="btnn"><i class="ti-search"></i></button>
                             </form>
                         </div>
@@ -128,12 +108,11 @@
                                 <div class="navbar-collapse">	
                                     <div class="nav-inner">	
                                         <ul class="nav main-menu menu navbar-nav">
-                                            <li class="active"><a href="${pageContext.request.contextPath}/guest/index.jsp">Home</a></li>
-                                            <li><a href="${pageContext.request.contextPath}/GuestIndexController?view=showProduct">Product</a></li>												
-                                            <li><a href="#">Service</a></li>
-                                            <li><a href="#">Pages</a></li>									
-
-                                            <li><a href="${pageContext.request.contextPath}/guest/contact.jsp">Contact Us</a></li>
+                                            <li class="<%= !"showProduct".equals(view) && !"contact".equals(view) ? "active" : "" %>"><a href="${pageContext.request.contextPath}/GuestIndexController?view=show">Home</a></li>
+                                            <li class="<%= "showProduct".equals(view) ? "active" : "" %>"><a href="${pageContext.request.contextPath}/GuestIndexController?view=showProduct">Product</a></li>									
+                                                <c:if test="<%= username.length() > 0%>">
+                                                    <li class="<%= "contact".equals(view) ? "active" : "" %>"><a href="GuestContactController?view=contact">Contact Us</a></li>
+                                                </c:if>
                                         </ul>
                                     </div>
                                 </div>

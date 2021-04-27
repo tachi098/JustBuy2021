@@ -318,6 +318,17 @@
             .product-deatil .message-text {
                 width: calc(100% - 70px)
             }
+            .notify-badge{
+                position: absolute;
+                right:10px;
+                top:10px;
+                background:red;
+                text-align: center;
+                border-radius: 30px 30px 30px 30px;
+                color:white;
+                padding:5px 10px;
+                font-size:15px;
+            }
 
             @media only screen and (min-width:1024px) {
                 .product-content div[class*=col-md-4] {
@@ -362,11 +373,14 @@
                             </div>
 
                             <c:forEach items="${listImage}" var="n">
+                                <c:if test="${productDetails.discount.percents *100 > 0 && productDetails.discount.endDate != null}">
+                                    <span class="notify-badge">${productDetails.discount.percents *100} %</span>
+                                </c:if>
                                 <div class="carousel-item">
                                     <img src="${pageContext.request.contextPath}/${n.link}" class="d-block w-40" style="height: auto; width: 300px"/>
                                 </div>
                             </c:forEach>
-                            
+
                         </div>
                         <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -381,34 +395,51 @@
 
 
                     <div class="col-md-6 col-md-offset-1 col-sm-12 col-xs-12">
-                        <h2 class="name">
-                            ${productDetails.name}
-                        </h2>
-                        <hr />
-                        <h3 class="price-container">
-                            <fmt:setLocale value="en_US" />
-                            <fmt:formatNumber value="${productDetails.price}" type="currency" />
-                            <small>(${productDetails.discount.percent *100}%)</small>
-                        </h3>
+                        <c:if test="${productDetails.discount.percents *100 == 0 || productDetails.discount.endDate == null}">
+                            <h2 class="name">
+                                ${productDetails.name}
+                            </h2>
+                            <hr />
+                            <h3 class="price-container">
+                                <fmt:setLocale value="en_US" />
+                                <fmt:formatNumber value="${productDetails.price}" type="currency" />
+                            </h3>
+                        </c:if>
+                        <c:if test="${productDetails.discount.percents *100 > 0 && productDetails.discount.endDate != null}">
+                            <h2 class="name">
+                                ${productDetails.name}
+                            </h2>
+                            <hr />
+                            <h3 class="price-container">
+                                <fmt:setLocale value="en_US" />
+                                <fmt:formatNumber value="${productDetails.price*(1-productDetails.discount.percents)}" type="currency" />
+                                <small><del>${productDetails.price}</del></small>
+                            </h3>
+                        </c:if>
                         <hr />
                         <div class="description description-tabs">
-                            <ul id="myTab" class="nav nav-pills">
-                                <li class="active"><a href="#more-information" data-toggle="tab" class="no-margin">Description </a></li>
-                            </ul>
-                            <div id="myTabContent" class="tab-content">
-                                <div class="tab-pane fade active in" id="more-information">
-                                    <br />
-                                    <strong>Description Title</strong>
-                                    <p>
-                                        ${productDetails.description}
-                                    </p>
-                                </div>
-                            </div>
+                            <strong>Description</strong>
+                            <p>
+                                ${productDetails.description}
+                            </p>
                         </div>
                         <hr />
                         <div class="row">
                             <div class="col-sm-12 col-md-6 col-lg-6">
-                                <a href="GuestCartController?view=add" class="btn btn-success btn-lg">Add to cart ($129.54)</a>
+                                <%                                                                                if (session.getAttribute("user") != null) {
+                                %>
+                                <form action="GuestCartController?view=addCard" method="post">
+                                    <input type="hidden" value="${product.id}" name="productId" />
+                                    <input type="submit" class="btn btn-primary buy" value="ADD TO CART">
+                                </form>
+                                <%
+                                } else {
+                                %>
+                                <a href="GuestLoginController?view=login" style="color: white" class="btn btn-primary buy">ADD TO CART</a>
+                                <%
+                                    }
+                                %>
+
                             </div>
                             <div class="col-sm-12 col-md-6 col-lg-6">
                                 <div class="btn-group pull-right">
