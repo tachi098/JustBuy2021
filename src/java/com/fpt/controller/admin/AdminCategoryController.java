@@ -4,8 +4,10 @@ import com.fpt.model.Category;
 import com.fpt.model.Users;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -75,12 +77,20 @@ public class AdminCategoryController extends HttpServlet {
     private void insert(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String name = request.getParameter("name");
-        Category cate = new Category();
-        cate.setName(name);
-        et.begin();
-        em.persist(cate);
-        et.commit();
-        response.sendRedirect("AdminCategoryController?view=show");
+        Query q = em.createNamedQuery("Category.findAll");
+        List<Category> cates = q.getResultList();
+        cates = cates.stream().filter(c -> name.equals(c.getName())).collect(Collectors.toList());
+        if (cates.isEmpty()) {
+            Category cate = new Category();
+            cate.setName(name);
+            et.begin();
+            em.persist(cate);
+            et.commit();
+            response.sendRedirect("AdminCategoryController?view=show");
+        } else {
+            request.setAttribute("error", "name is existed");
+            request.getRequestDispatcher("AdminCategoryController?view=create").forward(request, response);
+        }
     }
 
     private void create(HttpServletRequest request, HttpServletResponse response)
@@ -116,10 +126,19 @@ public class AdminCategoryController extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         Category cate = em.find(Category.class, id);
         String name = request.getParameter("name");
-        cate.setName(name);
-        et.begin();
-        em.merge(cate);
-        et.commit();
+                Query q = em.createNamedQuery("Category.findAll");
+        List<Category> cates = q.getResultList();
+        cates = cates.stream().filter(c -> name.equals(c.getName())).collect(Collectors.toList());
+        if (cates.isEmpty()) {
+            cate.setName(name);
+            et.begin();
+            em.merge(cate);
+            et.commit();
+            response.sendRedirect("AdminCategoryController?view=show");
+        } else {
+            request.setAttribute("error", "name is existed");
+            request.getRequestDispatcher("AdminCategoryController?view=edit").forward(request, response);
+        }
         response.sendRedirect("AdminCategoryController?view=show");
     }
 
