@@ -190,6 +190,7 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <div class="list-image overlay">
+                                            <span class="notify-badge">NEW</span>
                                             <img src="${product.image}" style="height: 200px !important; width: auto !important">
                                             <%
                                                 if (session.getAttribute("user") != null) {
@@ -291,12 +292,13 @@
                                 </div>
                             </div>
                         </div>
-                        <c:forEach var="product" items="${newItems}">
+                        <c:forEach var="product" items="${proDeal}">
                             <!-- Start Single List  -->
                             <div class="single-list">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <div class="list-image overlay">
+                                            <span class="notify-badge" style="background-color: red !important">${product.discount.percents *100} %</span>
                                             <img src="${product.image}" style="height: 200px !important;width: auto !important">
                                             <%
                                                 if (session.getAttribute("user") != null) {
