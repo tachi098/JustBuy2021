@@ -62,7 +62,7 @@
                 <div class="col-lg-2 col-md-2 col-12">
                     <!-- Logo -->
                     <div class="logo">
-                        <a href="GuestIndexController?view=show"><img src="${pageContext.request.contextPath}/guest/assets/images/logo.png" alt="logo"></a>
+                        <a href="GuestIndexController?view=show"><img src="${pageContext.request.contextPath}/admin/assets/img/logoheader.png" alt="logo"></a>
                     </div>
                     <!--/ End Logo -->
                     <!-- Search Form -->
