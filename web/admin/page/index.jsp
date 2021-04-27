@@ -24,7 +24,7 @@
                 <div class="card-body login-card-body">
                     <p class="login-box-msg">Sign in to start your session</p>
 
-                    <form action="http://localhost:8080/JustBuy2021/AdminLoginController?view=login" method="POST">
+                    <form action="${pageContext.request.contextPath}/AdminLoginController?view=login" method="POST">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" placeholder="Username" name="name">
                             <div class="input-group-append">

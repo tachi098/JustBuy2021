@@ -1,5 +1,6 @@
 package com.fpt.controller.guest;
 
+import com.fpt.model.Address;
 import com.fpt.model.Bill;
 import com.fpt.model.BillDetail;
 import com.fpt.model.Users;
@@ -140,6 +141,8 @@ public class GuestLoginController extends HttpServlet {
     private void create(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String name = request.getParameter("name");
+        String fullName = request.getParameter("fullName");
+        String address1 = request.getParameter("address");
         String email = request.getParameter("email");
         String pass = request.getParameter("pass");
         String cfpass = request.getParameter("cfpass");
@@ -149,13 +152,23 @@ public class GuestLoginController extends HttpServlet {
         if (users.size() == 0) {
             if (pass.equals(cfpass)) {
                 Users user = new Users();
+                user.setName(fullName);
                 user.setUsername(name);
                 user.setEmail(email);
                 user.setPassword(pass);
-                user.setName("UserAccount");
                 user.setRole(1);
+                
+                Address address = new Address();
+                address.setUserId(user);
+                address.setLine1(address1);
+                address.setLine2("");
+                address.setCity("");
+                address.setZipcode("");
+                address.setState("");
+                
                 et.begin();
                 em.persist(user);
+                em.persist(address);
                 et.commit();
                 response.sendRedirect("GuestLoginController?view=login");
             } else {
