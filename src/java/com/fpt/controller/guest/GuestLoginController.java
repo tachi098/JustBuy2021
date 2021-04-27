@@ -141,7 +141,6 @@ public class GuestLoginController extends HttpServlet {
     private void create(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String name = request.getParameter("name");
-        String fullName = request.getParameter("fullName");
         String address1 = request.getParameter("address");
         String email = request.getParameter("email");
         String pass = request.getParameter("pass");
@@ -152,7 +151,7 @@ public class GuestLoginController extends HttpServlet {
         if (users.size() == 0) {
             if (pass.equals(cfpass)) {
                 Users user = new Users();
-                user.setName(fullName);
+                user.setName("User Account");
                 user.setUsername(name);
                 user.setEmail(email);
                 user.setPassword(pass);
