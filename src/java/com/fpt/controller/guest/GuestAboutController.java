@@ -17,7 +17,7 @@ public class GuestAboutController extends HttpServlet {
             String view = request.getParameter("view");
 
             if (view == null) {
-                show(request, response);
+                showAbout(request, response);
             } else {
                 switch (view) {
                     case "create":
@@ -31,9 +31,9 @@ public class GuestAboutController extends HttpServlet {
                     case "update":
                         break;
                     case "show":
-                        show(request, response);
+                        showAbout(request, response);
                     default:
-                        show(request, response);
+                        showAbout(request, response);
                         break;
                 }
             }
@@ -42,7 +42,7 @@ public class GuestAboutController extends HttpServlet {
         }
     } 
 
-    private void show(HttpServletRequest request, HttpServletResponse response)
+    private void showAbout(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         request.getRequestDispatcher("guest/aboutus.jsp").forward(request, response);
     }

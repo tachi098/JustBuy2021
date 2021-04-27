@@ -72,6 +72,7 @@
                                                     </td>
                                                     <td>
                                                         <a href="GuestBillController?view=detail&id=${b.id}" class="btn btn-info" style="color: white">Detail</a>
+                                                    <c:if test="${b.bStatus == 0}"><a href="GuestBillController?view=cancel&id=${b.id}" class="btn btn-info" style="color: white; background-color: red">Cancel</a></c:if>
                                                     </td>
                                                 </tr>
                                             </c:if>

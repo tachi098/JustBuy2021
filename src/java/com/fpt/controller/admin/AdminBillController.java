@@ -47,9 +47,6 @@ public class AdminBillController extends HttpServlet {
                         case "showBillDetail":
                             showBillDetail(request, response);
                             break;
-                        case "processUpdateBill":
-                            processUpdateBill(request, response);
-                            break;
                         case "updateBill":
                             updateBill(request, response);
                             break;
@@ -75,7 +72,7 @@ public class AdminBillController extends HttpServlet {
             Query qAmountList = em.createNativeQuery("SELECT b.id AS id, sum(p.price*(1-bd.discount)*bd.quantity) AS amount FROM Bill b, BillDetail bd, Product p WHERE b.id = bd.billId AND p.id = bd.productId GROUP BY b.id", Amount.class);
             request.setAttribute("list", q.getResultList());
             request.setAttribute("listAmount", qAmountList.getResultList());
-            
+
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
             em.getTransaction().rollback();
@@ -97,7 +94,7 @@ public class AdminBillController extends HttpServlet {
             Query qD = em.createNamedQuery("BillDetail.findByBillId");
             qD.setParameter("id", id);
             request.setAttribute("billDetail", qD.getResultList());
-            
+
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
             em.getTransaction().rollback();
@@ -107,67 +104,45 @@ public class AdminBillController extends HttpServlet {
         request.getRequestDispatcher("admin/page/Bill/detail.jsp").forward(request, response);
     }
 
+//    private void updateBill(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        EntityManager em = emf.createEntityManager();
+//        try {
+//            int id = Integer.parseInt(request.getParameter("id"));
+//            Query q = em.createNamedQuery("Bill.findById");
+//            q.setParameter("id", id);
+//            request.setAttribute("bill", q.getSingleResult());
+//
+//            Query qD = em.createNamedQuery("BillDetail.findByBillId");
+//            qD.setParameter("id", id);
+//            request.setAttribute("billDetail", qD.getResultList());
+//
+//            Query qU = em.createNamedQuery("Users.findAll");
+//            request.setAttribute("listUser", qU.getResultList());
+//
+//            Query qP = em.createNamedQuery("Product.findAll");
+//            request.setAttribute("listProduct", qP.getResultList());
+//
+//        } catch (Exception e) {
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+//            em.getTransaction().rollback();
+//        } finally {
+//            em.close();
+//        }
+//        request.getRequestDispatcher("admin/page/Bill/update.jsp").forward(request, response);
+//    }
+
     private void updateBill(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         EntityManager em = emf.createEntityManager();
         try {
             int id = Integer.parseInt(request.getParameter("id"));
-            Query q = em.createNamedQuery("Bill.findById");
-            q.setParameter("id", id);
-            request.setAttribute("bill", q.getSingleResult());
-
-            Query qD = em.createNamedQuery("BillDetail.findByBillId");
-            qD.setParameter("id", id);
-            request.setAttribute("billDetail", qD.getResultList());
-
-            Query qU = em.createNamedQuery("Users.findAll");
-            request.setAttribute("listUser", qU.getResultList());
-
-            Query qP = em.createNamedQuery("Product.findAll");
-            request.setAttribute("listProduct", qP.getResultList());
-            
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-            em.getTransaction().rollback();
-        } finally {
-            em.close();
-        }
-        request.getRequestDispatcher("admin/page/Bill/update.jsp").forward(request, response);
-    }
-
-    private void processUpdateBill(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        EntityManager em = emf.createEntityManager();
-        try {
-            int billId = Integer.parseInt(request.getParameter("billId"));
-            int userId = Integer.parseInt(request.getParameter("userId"));
             int status = Integer.parseInt(request.getParameter("status"));
-            Date pDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("pDate"));
-            Bill bill = em.find(Bill.class, billId);
-            bill.setUserId(new Users(userId));
-            bill.setPurchaseDate(pDate);
+            Bill bill = em.find(Bill.class, id);
             bill.setbStatus(status);
             em.getTransaction().begin();
             em.merge(bill);
             em.getTransaction().commit();
-
-            Query q = em.createNamedQuery("BillDetail.findByBillId");
-            q.setParameter("id", billId);
-            List<BillDetail> list = q.getResultList();
-
-            for (BillDetail b : list) {
-                int productId = Integer.parseInt(request.getParameter("product" + b.getId()));
-                int quantity = Integer.parseInt(request.getParameter("quantity" + b.getId()));
-                double discount = Double.valueOf(request.getParameter("discount" + b.getId()));
-                BillDetail bd = em.find(BillDetail.class, b.getId());
-
-                bd.setProductId(new Product(productId));
-                bd.setQuantity(quantity);
-                bd.setDiscount(discount);
-                em.getTransaction().begin();
-                em.merge(bd);
-                em.getTransaction().commit();
-            }
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
             em.getTransaction().rollback();

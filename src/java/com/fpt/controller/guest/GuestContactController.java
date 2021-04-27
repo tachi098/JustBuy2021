@@ -24,24 +24,30 @@ public class GuestContactController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        try {
-            String view = request.getParameter("view");
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
+        if (user == null) {
+            request.getRequestDispatcher("GuestLoginController?view=login").forward(request, response);
+        } else {
+            try {
+                String view = request.getParameter("view");
 
-            if (view == null) {
-                contact(request, response);
-            } else {
-                switch (view) {
-                    case "process":
-                        process(request, response);
-                        break;
-                    case "show":
-                    default:
-                        contact(request, response);
-                        break;
+                if (view == null) {
+                    contact(request, response);
+                } else {
+                    switch (view) {
+                        case "process":
+                            process(request, response);
+                            break;
+                        case "show":
+                        default:
+                            contact(request, response);
+                            break;
+                    }
                 }
+            } catch (IOException | ServletException e) {
+                System.out.println(e.getMessage());
             }
-        } catch (IOException | ServletException e) {
-            System.out.println(e.getMessage());
         }
     }
 
