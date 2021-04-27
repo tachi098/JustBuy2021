@@ -1,5 +1,6 @@
 package com.fpt.controller.guest;
 
+import com.fpt.model.Category;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -93,18 +94,19 @@ public class GuestIndexController extends HttpServlet {
             Query qBestSeller = ez.createNativeQuery("select p.id from billDetail bd, product p where p.id = bd.productId group by p.id order by SUM(bd.quantity) desc");
             List<Product> productb = new ArrayList<>();
             List<Integer> productIds = qBestSeller.getResultList();
-            for (int i = 0; i < 3; i++) {
+            int a = productIds.size() >= 3 ? 3 : productIds.size();
+            for (int i = 0; i < a; i++) {
                 Product product = ez.find(Product.class, productIds.get(i));
                 productb.add(product);
             }
             request.setAttribute("bestSeller", productb);
-            
+
             //Get Item Deal
             Query qFindAll = ez.createNamedQuery("Product.findAll");
             List<Product> proAll = qFindAll.getResultList();
-            proAll = proAll.stream().filter(p -> p.getDiscount() != null).collect(Collectors.toList());
+            proAll = proAll.stream().filter(p -> p.getDiscount() != null).limit(3).collect(Collectors.toList());
             request.setAttribute("proDeal", proAll);
-            
+
             ez.getTransaction().commit();
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
@@ -119,21 +121,59 @@ public class GuestIndexController extends HttpServlet {
     private void showProduct(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        EntityManager em = emf.createEntityManager();
+        EntityManager ez = emf.createEntityManager();
         try {
-            em.getTransaction().begin();
+            ez.getTransaction().begin();
+            String cateId = request.getParameter("cateId") == null ? "cateId" : request.getParameter("cateId");
 
-            // Get all products
-            Query queryShowProduct = em.createNamedQuery("Product.findAll");
+            String keyword = request.getParameter("keyword") == null ? "" : request.getParameter("keyword");
+            int pageMax = request.getParameter("pageMax") == null ? 9 : Integer.valueOf(request.getParameter("pageMax"));
+            int count = 0;
+            if ("cateId".equals(cateId)) {
+                count = ((Number) ez.createNativeQuery("SELECT COUNT(*) FROM product WHERE name LIKE ?").setParameter(1, '%' + keyword + '%').getSingleResult()).intValue();
+            } else if (!"cateId".equals(cateId)) {
+                count = ((Number) ez.createNativeQuery("SELECT COUNT(*) FROM product  WHERE cateId = ?").setParameter(1, Integer.parseInt(cateId)).getSingleResult()).intValue();
+            }
+
+            int pages = (int) Math.ceil((1.0 * count) / pageMax);
+            int page = request.getParameter("page") == null ? 1 : Integer.valueOf(request.getParameter("page"));
+            int start = page * pageMax - (pageMax - 1);
+            int end = page * pageMax;
+            request.setAttribute("pages", pages);
+
+            Query queryShowProduct = null;
+            if ("cateId".equals(cateId)) {
+                queryShowProduct = ez.createNativeQuery("with abc as (select *, ROW_NUMBER() over (order by id desc) as Row_Int from product WHERE name LIKE ?) select * from abc WHERE Row_Int BETWEEN ? AND ?", Product.class);
+                queryShowProduct.setParameter(1, '%' + keyword + '%');
+                queryShowProduct.setParameter(2, start);
+                queryShowProduct.setParameter(3, end);
+            } else if (!"cateId".equals(cateId)) {
+                queryShowProduct = ez.createNativeQuery("with abc as (select *, ROW_NUMBER() over (order by id desc) as Row_Int from product WHERE cateId = ?) select * from abc WHERE Row_Int BETWEEN ? AND ?", Product.class);
+                queryShowProduct.setParameter(1, Integer.parseInt(cateId));
+                queryShowProduct.setParameter(2, start);
+                queryShowProduct.setParameter(3, end);
+            }
+//            Query queryShowProduct = ez.createNativeQuery("with abc as (select *, ROW_NUMBER() over (order by id desc) as Row_Int from product WHERE name LIKE ?) select * from abc WHERE Row_Int BETWEEN ? AND ?", Product.class);
+
             List<Product> products = queryShowProduct.getResultList();
+
+            Query qCate = ez.createNamedQuery("Category.findAll");
+            List<Category> cates = qCate.getResultList();
+            cates = cates.stream().filter(c -> c.getDeleteDate() == null).collect(Collectors.toList());
+
+            request.setAttribute("cateId", cateId);
+            request.setAttribute("cates", cates);
+            request.setAttribute("keyword", keyword);
+            request.setAttribute("pageMax", pageMax);
+            request.setAttribute("activePage", page);
             request.setAttribute("products", products);
             request.getRequestDispatcher("guest/show.jsp").forward(request, response);
-            em.getTransaction().commit();
+            ez.getTransaction().commit();
         } catch (IOException | ServletException e) {
             System.out.println(e.getMessage());
-            em.getTransaction().rollback();
+            ez.getTransaction().rollback();
         } finally {
-            em.close();
+            ez.close();
         }
 
     }

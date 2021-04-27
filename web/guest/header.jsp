@@ -73,8 +73,8 @@
                 <div class="col-lg-8 col-md-7 col-12">
                     <div class="search-bar-top">
                         <div class="search-bar">
-                            <form>
-                                <input style="width: 450px"  name="search" placeholder="Search Products Here....." type="search">
+                            <form action="GuestIndexController?view=showProduct" method="POST">
+                                <input style="width: 450px"  name="keyword" placeholder="Search Products Here....." type="search">
                                 <button class="btnn"><i class="ti-search"></i></button>
                             </form>
                         </div>

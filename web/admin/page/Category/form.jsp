@@ -62,6 +62,9 @@
                                         <div class="form-group">
                                             <label>Name</label>
                                             <input type="text" class="form-control" name="name" value="${category.name}" maxlength="50" required>
+                                            <c:if test="${not empty error}">
+                                                <p style="color: red">${error}</p>
+                                            </c:if>
                                         </div>
                                     </div>
                                 </div>
