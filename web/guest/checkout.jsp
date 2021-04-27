@@ -128,6 +128,9 @@
                                             <input type="hidden" name="billId" value="${billId}" />
                                             <button class="btn">proceed to checkout</button>
                                         </form>
+                                            
+                                            Or
+                                            
                                         <div id="paypal-button-container"></div>
                                     </div>
                                 </div>
@@ -304,7 +307,7 @@
                     // Create a PayPal app: https://developer.paypal.com/developer/applications/create
 
                     client: {
-                        sandbox:    'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
+                        sandbox:    'AeziYRAGktWGm1vfRMAo7aWJvO6oZ79-TQC-1kU24GUjza7ADyE2cyrVOl5mBSwDbLV4zcCOhCPpQHnK',
                         production: '<insert production client id>'
                     },
 
