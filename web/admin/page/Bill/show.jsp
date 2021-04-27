@@ -67,7 +67,19 @@
                                                         </td>
                                                         <td>
                                                             <c:choose>
-                                                                <c:when test="${b.bStatus == 0}"><span class="badge badge-primary">Processing</span></c:when>
+                                                                <c:when test="${b.bStatus == 0}">
+                                                                    <form action="AdminBillController?view=updateBill" method="post" class="d-flex">
+                                                                        
+                                                                        <input type="hidden" name="id" value="${b.id}"/>
+                                                                        <select name="status" class="form-control">
+                                                                            <option value="0" selected>Processing</option>
+                                                                            <option value="1">Shipping</option>
+                                                                            <option value="2">Complete</option>
+                                                                            <option value="3">Canceled</option>
+                                                                        </select>
+                                                                        <input type="submit" value="Update" class="btn btn-warning"/>
+                                                                    </form>
+                                                                </c:when>
                                                                 <c:when test="${b.bStatus == 1}"><span class="badge badge-warning">Shipping</span></c:when>
                                                                 <c:when test="${b.bStatus == 2}"><span class="badge badge-success">Complete</span></c:when>
                                                                 <c:when test="${b.bStatus == 3}"><span class="badge badge-danger">Canceled</span></c:when>
@@ -75,9 +87,6 @@
                                                         </td>
                                                         <td>
                                                             <a href="AdminBillController?view=showBillDetail&id=${b.id}" class="btn btn-info">Detail</a>
-                                                            <c:if test="${b.bStatus == 0}">
-                                                                <a href="AdminBillController?view=updateBill&id=${b.id}" class="btn btn-warning">Update</a>
-                                                            </c:if>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>

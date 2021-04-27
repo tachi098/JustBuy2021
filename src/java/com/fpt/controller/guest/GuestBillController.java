@@ -42,7 +42,8 @@ public class GuestBillController extends HttpServlet {
                 show(request, response);
             } else {
                 switch (view) {
-                    case "create":
+                    case "cancel":
+                        cancel(request, response);
                         break;
                     case "insert":
                         break;
@@ -67,14 +68,24 @@ public class GuestBillController extends HttpServlet {
 
     private void show(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Users user = (Users) session.getAttribute("user");
+        EntityManager eManager = emf.createEntityManager();
+        try {
 
-        Query q = em.createNativeQuery("SELECT * from bill b where b.userId = ?", Bill.class);
-        q.setParameter(1, user.getId());
-        Query qAmountList = em.createNativeQuery("SELECT b.id AS id, sum(p.price*(100-bd.discount)/100*bd.quantity) AS amount FROM Bill b, BillDetail bd, Product p WHERE b.id = bd.billId AND p.id = bd.productId GROUP BY b.id", Amount.class);
-        request.setAttribute("list", q.getResultList());
-        request.setAttribute("listAmount", qAmountList.getResultList());
+            eManager.getTransaction().begin();
+            HttpSession session = request.getSession();
+            Users user = (Users) session.getAttribute("user");
+
+            Query q = eManager.createNativeQuery("SELECT * from bill b where b.userId = ?", Bill.class);
+            q.setParameter(1, user.getId());
+            Query qAmountList = eManager.createNativeQuery("SELECT b.id AS id, sum(p.price*(100-bd.discount)/100*bd.quantity) AS amount FROM Bill b, BillDetail bd, Product p WHERE b.id = bd.billId AND p.id = bd.productId GROUP BY b.id", Amount.class);
+            request.setAttribute("list", q.getResultList());
+            request.setAttribute("listAmount", qAmountList.getResultList());
+
+            eManager.getTransaction().commit();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+            eManager.getTransaction().rollback();
+        }
         request.getRequestDispatcher("guest/page/bill/show.jsp").forward(request, response);
     }
 
@@ -86,8 +97,8 @@ public class GuestBillController extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         Query q = em.createNamedQuery("Bill.findById");
         q.setParameter("id", id);
-        Bill bill = (Bill)q.getSingleResult();
-        if(bill.getUserId().getId() != user.getId()){
+        Bill bill = (Bill) q.getSingleResult();
+        if (bill.getUserId().getId() != user.getId()) {
             request.getRequestDispatcher("/").forward(request, response);
         }
         request.setAttribute("bill", bill);
@@ -99,6 +110,23 @@ public class GuestBillController extends HttpServlet {
         request.getRequestDispatcher("guest/page/bill/detail.jsp").forward(request, response);
     }
 
+    
+    private void cancel(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Bill bill = em.find(Bill.class, id);
+        
+        try {
+            bill.setbStatus(3);
+            em.getTransaction().begin();
+            em.merge(bill);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+            em.getTransaction().rollback();
+        }
+        response.sendRedirect("GuestBillController?view=show");
+    }
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

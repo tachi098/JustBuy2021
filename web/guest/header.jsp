@@ -37,15 +37,15 @@
                     <!-- Top Right -->
                     <div class="right-content">
                         <ul class="list-main">
-                                <c:if test="<%= username.length() > 0%>">
+                            <c:if test="<%= username.length() > 0%>">
                                 <li><i class="ti-user"></i> <a href="${pageContext.request.contextPath}/GuestUserController?view=show"><%= username%></a></li>
                                 </c:if>
 
                             <c:if test="<%= username.length() > 0%>">
                                 <li><i class="ti-receipt"></i><a href="${pageContext.request.contextPath}/GuestBillController?view=show">Bill History</a></li>
                                 <li><i class="ti-power-off"></i><a href="${pageContext.request.contextPath}/GuestLoginController?view=logout">Logout</a></li>
-                            </c:if>
-                            <c:if test="<%= username.length() == 0%>">
+                                    </c:if>
+                                    <c:if test="<%= username.length() == 0%>">
                                 <li><i class="ti-power-off"></i><a href="${pageContext.request.contextPath}/GuestLoginController?view=show">Login</a></li>
                                     </c:if>
                         </ul>
@@ -109,11 +109,10 @@
                                 <div class="navbar-collapse">	
                                     <div class="nav-inner">	
                                         <ul class="nav main-menu menu navbar-nav">
-                                            <li class="<%= !"showProduct".equals(view) && !"contact".equals(view) ? "active" : "" %>"><a href="${pageContext.request.contextPath}/GuestIndexController?view=show">Home</a></li>
-                                            <li class="<%= "showProduct".equals(view) ? "active" : "" %>"><a href="${pageContext.request.contextPath}/GuestIndexController?view=showProduct">Product</a></li>									
-                                                <c:if test="<%= username.length() > 0%>">
-                                                    <li class="<%= "contact".equals(view) ? "active" : "" %>"><a href="GuestContactController?view=contact">Contact Us</a></li>
-                                                </c:if>
+                                            <li class="<%= !"showProduct".equals(view) && !"contact".equals(view) && !"showAbout".equals(view) ? "active" : ""%>"><a href="${pageContext.request.contextPath}/GuestIndexController?view=show">Home</a></li>
+                                            <li class="<%= "showProduct".equals(view) ? "active" : ""%>"><a href="${pageContext.request.contextPath}/GuestIndexController?view=showProduct">Product</a></li>									
+                                            <li class="<%= "contact".equals(view)  ? "active" : ""%>"><a href="GuestContactController?view=contact">Contact Us</a></li>
+                                            <li class="<%= "showAbout".equals(view) ? "active" : ""%>"><a href="GuestAboutController?view=showAbout">About Us</a></li>
                                         </ul>
                                     </div>
                                 </div>
