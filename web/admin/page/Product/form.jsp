@@ -81,7 +81,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Description</label>
-                                                <textarea class="form-control" name="description" rows="4" required maxlength="150">${product.description == null ? "" : product.description}</textarea>
+                                                <textarea class="form-control" name="description" rows="4" required maxlength="3000">${product.description == null ? "" : product.description}</textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label>Images</label>

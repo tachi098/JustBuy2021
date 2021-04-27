@@ -73,7 +73,7 @@ public class AdminBillController extends HttpServlet {
         try {
             Query q = em.createNamedQuery("Bill.findAll");
             //Query qAmountList = em.createNamedQuery("BillDetail.countAmount");
-            Query qAmountList = em.createNativeQuery("SELECT b.id AS id, sum(p.price*(100-bd.discount)/100*bd.quantity) AS amount FROM Bill b, BillDetail bd, Product p WHERE b.id = bd.billId AND p.id = bd.productId GROUP BY b.id", Amount.class);
+            Query qAmountList = em.createNativeQuery("SELECT b.id AS id, sum(p.price*(1-bd.discount)*bd.quantity) AS amount FROM Bill b, BillDetail bd, Product p WHERE b.id = bd.billId AND p.id = bd.productId GROUP BY b.id", Amount.class);
             request.setAttribute("list", q.getResultList());
             request.setAttribute("listAmount", qAmountList.getResultList());
             

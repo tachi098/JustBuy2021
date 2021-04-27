@@ -1,6 +1,7 @@
 package com.fpt.controller.admin;
 
 import com.fpt.model.Feedback;
+import com.fpt.model.Users;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class AdminFeedbackController extends HttpServlet {
 
@@ -23,27 +25,33 @@ public class AdminFeedbackController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("userAdmin");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/admin");
+        } else {
+            try {
+                String view = request.getParameter("view");
 
-        try {
-            String view = request.getParameter("view");
-
-            if (view == null) {
-                show(request, response);
-            } else {
-                switch (view) {
-                    case "detail":
-                        detail(request, response);
-                        break;
-                    case "show":
-                    default:
-                        show(request, response);
-                        break;
+                if (view == null) {
+                    show(request, response);
+                } else {
+                    switch (view) {
+                        case "detail":
+                            detail(request, response);
+                            break;
+                        case "show":
+                        default:
+                            show(request, response);
+                            break;
+                    }
                 }
+            } catch (IOException | ServletException e) {
+                System.out.println(e.getMessage());
             }
-        } catch (IOException | ServletException e) {
-            System.out.println(e.getMessage());
         }
     }
+    
 
     private void show(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
