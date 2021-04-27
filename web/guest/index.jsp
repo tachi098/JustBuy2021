@@ -92,7 +92,7 @@
                                                             <div class="button-head">
                                                                 <div class="product-action-2">
                                                                     <c:if test="<%= username.length() > 0%>">
-                                                                        <a title="Add to cart" href="GuestCartController?view=add">Add to cart</a>
+                                                                        <a title="Add to cart" href="GuestCartController?view=addCard">Add to cart</a>
                                                                     </c:if>
                                                                     <c:if test="<%= username.length() < 1%>">
                                                                         <a title="Add to cart" href="GuestLoginController?view=login">Add to cart</a>

@@ -16,6 +16,7 @@ import com.fpt.model.Product;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 public class GuestIndexController extends HttpServlet {
 
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("JustBuyPU");
@@ -103,9 +104,22 @@ public class GuestIndexController extends HttpServlet {
 
     private void showProduct(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Query q = em.createNamedQuery("Product.findAll");
-        request.setAttribute("productList", q.getResultList());
-        request.getRequestDispatcher("guest/show.jsp").forward(request, response);
+       EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            // Get all products
+            Query queryShowProduct = em.createNamedQuery("Product.findAll");
+            List<Product> products = queryShowProduct.getResultList();
+            request.setAttribute("products", products);
+            request.getRequestDispatcher("guest/show.jsp").forward(request, response);
+            em.getTransaction().commit();
+        } catch (IOException | ServletException e) {
+            System.out.println(e.getMessage());
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
+        }
 
     }
 
@@ -130,12 +144,9 @@ public class GuestIndexController extends HttpServlet {
 
     }
 
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }
 
-    public void persist(Object object) {;
+    public void persist(Object object) {
+        EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             em.persist(object);

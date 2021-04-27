@@ -2,7 +2,7 @@
 <%
     Users user = (Users) session.getAttribute("userAdmin");
     if (user != null) {
-        response.sendRedirect(request.getContextPath() + "/AdminProductController?view=show");
+        response.sendRedirect(request.getContextPath() + "/AdminDashboardController?view=show");
     }
 %>
 <!DOCTYPE html>

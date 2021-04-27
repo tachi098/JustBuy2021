@@ -70,7 +70,7 @@
                                                                 <c:when test="${b.bStatus == 0}"><span class="badge badge-primary">Processing</span></c:when>
                                                                 <c:when test="${b.bStatus == 1}"><span class="badge badge-warning">Shipping</span></c:when>
                                                                 <c:when test="${b.bStatus == 2}"><span class="badge badge-success">Complete</span></c:when>
-                                                                <c:otherwise>Canceled</c:otherwise>
+                                                                <c:when test="${b.bStatus == 3}"><span class="badge badge-danger">Canceled</span></c:when>
                                                             </c:choose>
                                                         </td>
                                                         <td>
