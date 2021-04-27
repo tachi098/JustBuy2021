@@ -1,4 +1,4 @@
-<%@include file="java.jsp" %> 
+<%--<%@include file="java.jsp" %>--%> 
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page import="com.fpt.model.Users"%>
 <%

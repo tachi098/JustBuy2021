@@ -48,6 +48,14 @@
         <servlet-name>GuestContactController</servlet-name>
         <servlet-class>com.fpt.controller.guest.GuestContactController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AdminDashboardController</servlet-name>
+        <servlet-class>com.fpt.controller.admin.AdminDashboardController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GuestAboutController</servlet-name>
+        <servlet-class>com.fpt.controller.guest.GuestAboutController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminUserController</servlet-name>
         <url-pattern>/AdminUserController</url-pattern>
@@ -95,6 +103,14 @@
     <servlet-mapping>
         <servlet-name>GuestContactController</servlet-name>
         <url-pattern>/GuestContactController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminDashboardController</servlet-name>
+        <url-pattern>/AdminDashboardController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GuestAboutController</servlet-name>
+        <url-pattern>/GuestAboutController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

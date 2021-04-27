@@ -131,7 +131,7 @@ public class GuestCartController extends HttpServlet {
                     em.getTransaction().commit();
                 }
 
-            } else {
+            } else if(bills.isEmpty()) {
                 // Get user
                 Users users = em.find(Users.class, userId);
                 Date purchaseDate = new Date();
@@ -177,9 +177,9 @@ public class GuestCartController extends HttpServlet {
                 em.persist(billDetail);
                 em.getTransaction().commit();
             }
-            
+
             int countCart = 0;
-            
+
             // Get Bill Details
             if (bills.size() > 0) {
                 Bill bill = (Bill) queryBills.getSingleResult();
@@ -188,7 +188,7 @@ public class GuestCartController extends HttpServlet {
             }
 
             session.setAttribute("countCart", countCart);
-            response.sendRedirect("GuestIndexController?view=show");
+            response.sendRedirect("GuestCartController?view=show");
         } catch (IOException e) {
             System.out.println(e.getMessage());
             em.getTransaction().rollback();
@@ -226,9 +226,22 @@ public class GuestCartController extends HttpServlet {
                 em.merge(product);
             });
 
+            Query queryBill = em.createNativeQuery("SELECT * FROM bill WHERE userId = ? AND bStatus = 4", Bill.class);
+            queryBill.setParameter(1, userId);
+            List<Bill> bills = queryBill.getResultList();
+
+            int countCart = 0;
+            // Get Bill Details
+            if (bills.size() > 0) {
+                Bill bill1 = (Bill) queryBill.getSingleResult();
+                List<BillDetail> billDetail = (List<BillDetail>) bill1.getBillDetailCollection();
+                countCart = billDetail.stream().map(bd -> bd.getQuantity()).reduce(countCart, Integer::sum);
+            }
+
+            session.setAttribute("countCart", countCart);
+
             session.setAttribute("payment", "Payment was successful, many thanks!");
             request.setAttribute("users", users);
-            session.removeAttribute("countCart");
             em.getTransaction().commit();
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
@@ -247,8 +260,9 @@ public class GuestCartController extends HttpServlet {
         try {
             em.getTransaction().begin();
 
-            int userID = 2;
-            Users users = em.find(Users.class, userID);
+            HttpSession session = request.getSession();
+            int userId = ((Users) session.getAttribute("user")).getId();
+            Users users = em.find(Users.class, userId);
 
             float subtotal = Float.valueOf(request.getParameter("subtotal"));
             int billId = Integer.valueOf(request.getParameter("billId"));
@@ -273,12 +287,13 @@ public class GuestCartController extends HttpServlet {
 
         EntityManager em = emf.createEntityManager();
         try {
-            em.getTransaction().begin();
 
             int billDetailId = Integer.valueOf(request.getParameter("billDetailId"));
             BillDetail billDetail = em.find(BillDetail.class, billDetailId);
-
+            
+            em.getTransaction().begin();
             em.remove(billDetail);
+            
 
             int billId = Integer.valueOf(request.getParameter("billId"));
             Query queryBilldetails = em.createNativeQuery("SELECT * FROM billDetail WHERE billId = ?", BillDetail.class);
@@ -290,6 +305,23 @@ public class GuestCartController extends HttpServlet {
                 em.remove(bill);
             }
 
+            HttpSession session = request.getSession();
+            // Get countcart
+            int userId = ((Users) session.getAttribute("user")).getId();
+            Query queryBill = em.createNativeQuery("SELECT * FROM bill WHERE userId = ? AND bStatus = 4", Bill.class);
+            queryBill.setParameter(1, userId);
+            List<Bill> bills = queryBill.getResultList();
+
+            int countCart = 0;
+            // Get Bill Details
+            if (bills.size() > 0) {
+                Bill bill = (Bill) queryBill.getSingleResult();
+                List<BillDetail> billDetailsss = (List<BillDetail>) bill.getBillDetailCollection();
+                countCart = billDetailsss.stream().map(bd -> bd.getQuantity()).reduce(countCart, Integer::sum);
+            }
+
+            session.setAttribute("countCart", countCart);
+            response.sendRedirect("GuestCartController?view=show");
             em.getTransaction().commit();
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
@@ -298,7 +330,6 @@ public class GuestCartController extends HttpServlet {
             em.close();
         }
 
-        response.sendRedirect("GuestCartController?view=show");
     }
 
     private void change(HttpServletRequest request, HttpServletResponse response)
@@ -331,6 +362,22 @@ public class GuestCartController extends HttpServlet {
                 response.sendRedirect("GuestCartController?view=show");
             }
 
+            // Get countcart
+            int userId = ((Users) session.getAttribute("user")).getId();
+            Query queryBill = em.createNativeQuery("SELECT * FROM bill WHERE userId = ? AND bStatus = 4", Bill.class);
+            queryBill.setParameter(1, userId);
+            List<Bill> bills = queryBill.getResultList();
+
+            int countCart = 0;
+            // Get Bill Details
+            if (bills.size() > 0) {
+                Bill bill = (Bill) queryBill.getSingleResult();
+                List<BillDetail> billDetail = (List<BillDetail>) bill.getBillDetailCollection();
+                countCart = billDetail.stream().map(bd -> bd.getQuantity()).reduce(countCart, Integer::sum);
+            }
+
+            session.setAttribute("countCart", countCart);
+
             em.getTransaction().commit();
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
@@ -346,7 +393,7 @@ public class GuestCartController extends HttpServlet {
 
         EntityManager em = emf.createEntityManager();
         try {
-            em.getTransaction().begin();
+//            em.getTransaction().begin();
 
             // Hard Code ID User
             HttpSession session = request.getSession();
@@ -360,9 +407,13 @@ public class GuestCartController extends HttpServlet {
             if (bills.size() > 0) {
 
                 Bill bill = (Bill) queryBill.getSingleResult();
+                
+                int billId = bill.getId();
 
                 // Get Bill Details
-                List<BillDetail> billDetail = (List<BillDetail>) bill.getBillDetailCollection();
+                Query queryBillDetails = em.createNativeQuery("SELECT * FROM billDetail WHERE billId = ?", BillDetail.class);
+                queryBillDetails.setParameter(1, billId);
+                List<BillDetail> billDetail = queryBillDetails.getResultList();
 
                 // Subtotal price(have discount)
                 float subTotalDiscount = 0;
@@ -378,17 +429,23 @@ public class GuestCartController extends HttpServlet {
                 request.setAttribute("bill", bill);
                 request.setAttribute("subTotal", subTotalDiscount);
                 request.setAttribute("billDetail", billDetail);
+                
+                request.getRequestDispatcher("guest/cart.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("guest/cart.jsp").forward(request, response);
             }
 
-            em.getTransaction().commit();
-        } catch (Exception e) {
+//            em.getTransaction().commit();
+            
+//            request.getRequestDispatcher("guest/cart.jsp").forward(request, response);
+        } catch (IOException | ServletException e) {
             System.out.println(e.getMessage());
             em.getTransaction().rollback();
         } finally {
             em.close();
         }
 
-        request.getRequestDispatcher("guest/cart.jsp").forward(request, response);
+        
     }
 
     @Override

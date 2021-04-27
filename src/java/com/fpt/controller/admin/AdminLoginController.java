@@ -55,7 +55,7 @@ public class AdminLoginController extends HttpServlet {
             if (user.getRole() == 0) {
                 session.setAttribute("userAdmin", user);
             }
-            request.getRequestDispatcher("AdminProductController?view=show").forward(request, response);
+            request.getRequestDispatcher("AdminDashboardController?view=show").forward(request, response);
         } else {
             response.sendRedirect(request.getContextPath() + "/admin");
         }
