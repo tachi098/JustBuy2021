@@ -37,7 +37,7 @@
                     </div>
                     <div  class="col-lg-4 col-md-6 col-12 mt-5">
                         <select id="selectedRecords" class="form-control"> 
-                            <option>Filter Category</option>
+                            <option value="0">Filter Category</option>
                             <c:forEach items="${cates}" var="category">
                                 <option value="${category.id}" ${cateId eq category.id ? 'selected' : ''}>${category.name}</option>
                             </c:forEach>
