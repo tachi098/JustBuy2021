@@ -60,8 +60,8 @@ public class Product implements Serializable {
     @Size(max = 50)
     @Column(name = "image", length = 50)
     private String image;
-    @Size(max = 150)
-    @Column(name = "description", length = 150)
+    @Size(max = 3000)
+    @Column(name = "description", length = 3000)
     private String description;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "price", precision = 53)
