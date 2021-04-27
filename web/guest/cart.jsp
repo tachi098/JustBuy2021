@@ -46,6 +46,11 @@
                             %>
                         </h2>
                         
+                        <%
+                            int countCart = (int)session.getAttribute("countCart");
+                            if(countCart > 0) {
+                        %>
+                        
                         <!-- Shopping Summery -->
                         <fmt:setLocale value="en_US" />
                         <table class="table shopping-summery">
@@ -107,6 +112,10 @@
                         </table>
 
                         <!--/ End Shopping Summery -->
+                        
+                        <%
+                            }
+                        %>
                     </div>
                 </div>
                 <div class="row">
