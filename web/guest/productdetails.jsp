@@ -429,7 +429,7 @@
                                 <%                                                                                if (session.getAttribute("user") != null) {
                                 %>
                                 <form action="GuestCartController?view=addCard" method="post">
-                                    <input type="hidden" value="${product.id}" name="productId" />
+                                    <input type="hidden" value="${productDetails.id}" name="productId" />
                                     <input type="submit" class="btn btn-primary buy" value="ADD TO CART">
                                 </form>
                                 <%
