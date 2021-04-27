@@ -81,8 +81,10 @@ public class GuestLoginController extends HttpServlet {
                     HttpSession session = request.getSession();
                     session.setAttribute("user", user);
 
+                    int userId = ((Users) session.getAttribute("user")).getId();
+                    
                     Query queryBill = ez.createNativeQuery("SELECT * FROM bill WHERE userId = ? AND bStatus = 4", Bill.class);
-                    queryBill.setParameter(1, user.getId());
+                    queryBill.setParameter(1, userId);
 //                    Bill bill = (Bill) queryBill.getSingleResult();
                     List<Bill> bills = queryBill.getResultList();
 
@@ -122,7 +124,7 @@ public class GuestLoginController extends HttpServlet {
         Users user = (Users) session.getAttribute("user");
         if (user != null) {
             session.removeAttribute("user");
-            session.removeAttribute("countCart");
+//            session.removeAttribute("countCart");
             request.getRequestDispatcher("GuestIndexController?view=show").forward(request, response);
         }
     }
