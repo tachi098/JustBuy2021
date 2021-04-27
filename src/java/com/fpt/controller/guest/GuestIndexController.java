@@ -98,8 +98,13 @@ public class GuestIndexController extends HttpServlet {
                 productb.add(product);
             }
             request.setAttribute("bestSeller", productb);
-
-
+            
+            //Get Item Deal
+            Query qFindAll = ez.createNamedQuery("Product.findAll");
+            List<Product> proAll = qFindAll.getResultList();
+            proAll = proAll.stream().filter(p -> p.getDiscount() != null).collect(Collectors.toList());
+            request.setAttribute("proDeal", proAll);
+            
             ez.getTransaction().commit();
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
