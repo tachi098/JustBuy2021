@@ -190,7 +190,7 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <div class="list-image overlay">
-                                            <img src="${product.image}">
+                                            <img src="${product.image}" style="height: 200px !important; width: auto !important">
                                             <%
                                                 if (session.getAttribute("user") != null) {
                                             %>
@@ -244,7 +244,7 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <div class="list-image overlay">
-                                            <img src="${product.image}">
+                                            <img src="${product.image}" style="height: 200px !important;width: auto !important">
                                             <%
                                                 if (session.getAttribute("user") != null) {
                                             %>
@@ -283,6 +283,58 @@
                         </c:forEach>
                     </div>
                     
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="shop-section-title">
+                                    <h1>Deal</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <c:forEach var="product" items="${newItems}">
+                            <!-- Start Single List  -->
+                            <div class="single-list">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-12">
+                                        <div class="list-image overlay">
+                                            <img src="${product.image}" style="height: 200px !important;width: auto !important">
+                                            <%
+                                                if (session.getAttribute("user") != null) {
+                                            %>
+                                            <form action="GuestCartController?view=addCard" method="post">
+                                                <input type="hidden" value="${product.id}" name="productId" />
+                                                <button type="submit" class="buy"><i class="fa fa-shopping-bag"></i></button>
+                                            </form>
+                                            <%
+                                            } else {
+                                            %>
+                                            <a href="GuestLoginController?view=login" class="buy"><i class="fa fa-shopping-bag"></i></a>
+                                                <%
+                                                    }
+                                                %>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-12 no-padding">
+                                        <div class="content">
+                                            <h4 class="title"><a href="GuestIndexController?view=productDetails&id=${product.id}">${product.name}</a></h4>
+                                            <p class="price with-discount">
+                                                <c:if test="${product.discount.percents *100 == 0 || product.discount.endDate == null}">
+                                                    <fmt:setLocale value="en_US" />
+                                                    <fmt:formatNumber value="${product.price}" type="currency" />
+                                                </c:if>
+                                                <c:if test="${product.discount.percents *100 > 0 && product.discount.endDate != null}">
+                                                    <fmt:setLocale value="en_US" />
+                                                    <fmt:formatNumber value="${product.price*(1-product.discount.percents)}" type="currency" />
+                                                </c:if>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Single List  -->
+                        </c:forEach>
+                    </div>
                     
                 </div>
             </div>
