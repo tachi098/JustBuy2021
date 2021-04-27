@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%@include file="java.jsp" %>
 <!DOCTYPE html>
@@ -14,7 +15,19 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JustBuy</title>
     </head>
-
+    <style>
+        .notify-badge{
+            position: absolute;
+            right:10px;
+            top:10px;
+            background:green;
+            text-align: center;
+            border-radius: 30px 30px 30px 30px;
+            color:white;
+            padding:5px 10px;
+            font-size:15px;
+        }
+    </style>
 
     <body class="js">
 
@@ -48,88 +61,30 @@
         </section>
         <!--/ End Slider Area -->
 
-        <!-- Start Small Banner  -->
-        <section class="small-banner section">
-            <div class="container-fluid">
-                <div class="row">
-                    <!-- Single Banner  -->
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <div class="single-banner">
-                            <img src="https://via.placeholder.com/600x370" alt="#">
-                            <div class="content">
-                                <p>Man's Collectons</p>
-                                <h3>Summer travel <br> collection</h3>
-                                <a href="#">Discover Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /End Single Banner  -->
-                    <!-- Single Banner  -->
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <div class="single-banner">
-                            <img src="https://via.placeholder.com/600x370" alt="#">
-                            <div class="content">
-                                <p>Bag Collectons</p>
-                                <h3>Awesome Bag <br> 2020</h3>
-                                <a href="#">Shop Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /End Single Banner  -->
-                    <!-- Single Banner  -->
-                    <div class="col-lg-4 col-12">
-                        <div class="single-banner tab-height">
-                            <img src="https://via.placeholder.com/600x370" alt="#">
-                            <div class="content">
-                                <p>Flash Sale</p>
-                                <h3>Mid Season <br> Up to <span>40%</span> Off</h3>
-                                <a href="#">Discover Now</a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /End Single Banner  -->
-                </div>
-            </div>
-        </section>
-        <!-- End Small Banner -->
-
-
         <!-- Start Product Area -->
         <div class="product-area section">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="section-title">
-                            <h2>Trending Item</h2>
+                            <h2>New Item</h2>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12">
                         <div class="product-info">
-                            <div class="nav-main">
-                                <!-- Tab Nav -->
-                                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#man" role="tab">Man</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#women" role="tab">Woman</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#kids" role="tab">Kids</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#accessories" role="tab">Accessories</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#essential" role="tab">Essential</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#prices" role="tab">Prices</a></li>
-                                </ul>
-                                <!--/ End Tab Nav -->
-                            </div>
                             <div class="tab-content" id="myTabContent">
                                 <!-- Start Single Tab -->
                                 <div class="tab-pane fade show active" id="man" role="tabpanel">
                                     <div class="tab-single">
                                         <div class="row">
-                                            <c:forEach items="${productList}" var="m">
+                                            <c:forEach items="${newProducts}" var="m">
                                                 <div class="col-xl-3 col-lg-4 col-md-4 col-12">
                                                     <div class="single-product">
                                                         <div class="product-img">
-
                                                             <a href="${pageContext.request.contextPath}/GuestIndexController?view=productDetails&id=${m.id}">
+                                                                <span class="notify-badge">NEW</span>
                                                                 <img class="default-img" src="${pageContext.request.contextPath}/${m.image}" alt="#">
                                                                 <img class="hover-img" src="${pageContext.request.contextPath}/${m.image}" alt="#">
                                                             </a>
@@ -149,7 +104,15 @@
                                                         <div class="product-content">
                                                             <h3><a href="${pageContext.request.contextPath}/GuestIndexController?view=productDetails&id=${m.id}">${m.name}</a></h3>
                                                             <div class="product-price">
-                                                                <span>$${m.price}</span>
+                                                                <c:if test="${m.discount.percents *100 == 0 || m.discount.endDate == null}">
+                                                                    <fmt:setLocale value="en_US" />
+                                                                    <fmt:formatNumber value="${m.price}" type="currency" />
+                                                                </c:if>
+                                                                <c:if test="${m.discount.percents *100 > 0 && m.discount.endDate != null}">
+                                                                    <fmt:setLocale value="en_US" />
+                                                                    <fmt:formatNumber value="${m.price*(1-m.discount.percents)}" type="currency" />
+                                                                    <small><del>${m.price}</del></small>
+                                                                </c:if>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -209,7 +172,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="shop-section-title">
-                                    <h1>On sale</h1>
+                                    <h1>New Items</h1>
                                 </div>
                             </div>
                         </div>
@@ -230,43 +193,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- End Single List  -->
-                        <!-- Start Single List  -->
-                        <div class="single-list">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    <div class="list-image overlay">
-                                        <img src="https://via.placeholder.com/115x140" alt="#">
-                                        <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-12 no-padding">
-                                    <div class="content">
-                                        <h5 class="title"><a href="#">Licity jelly leg flat Sandals</a></h5>
-                                        <p class="price with-discount">$44</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Single List  -->
-                        <!-- Start Single List  -->
-                        <div class="single-list">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    <div class="list-image overlay">
-                                        <img src="https://via.placeholder.com/115x140" alt="#">
-                                        <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-12 no-padding">
-                                    <div class="content">
-                                        <h5 class="title"><a href="#">Licity jelly leg flat Sandals</a></h5>
-                                        <p class="price with-discount">$89</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Single List  -->
                     </div>
                     <div class="col-lg-4 col-md-6 col-12">
                         <div class="row">
@@ -399,57 +325,6 @@
         </section>
         <!-- End Shop Home List  -->
 
-        <!-- Start Shop Blog  -->
-        <section class="shop-blog section">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="section-title">
-                            <h2>From Our Blog</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <!-- Start Single Blog  -->
-                        <div class="shop-single-blog">
-                            <img src="https://via.placeholder.com/370x300" alt="#">
-                            <div class="content">
-                                <p class="date">22 July , 2020. Monday</p>
-                                <a href="#" class="title">Sed adipiscing ornare.</a>
-                                <a href="#" class="more-btn">Continue Reading</a>
-                            </div>
-                        </div>
-                        <!-- End Single Blog  -->
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <!-- Start Single Blog  -->
-                        <div class="shop-single-blog">
-                            <img src="https://via.placeholder.com/370x300" alt="#">
-                            <div class="content">
-                                <p class="date">22 July, 2020. Monday</p>
-                                <a href="#" class="title">Man’s Fashion Winter Sale</a>
-                                <a href="#" class="more-btn">Continue Reading</a>
-                            </div>
-                        </div>
-                        <!-- End Single Blog  -->
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <!-- Start Single Blog  -->
-                        <div class="shop-single-blog">
-                            <img src="https://via.placeholder.com/370x300" alt="#">
-                            <div class="content">
-                                <p class="date">22 July, 2020. Monday</p>
-                                <a href="#" class="title">Women Fashion Festive</a>
-                                <a href="#" class="more-btn">Continue Reading</a>
-                            </div>
-                        </div>
-                        <!-- End Single Blog  -->
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- End Shop Blog  -->
 
         <!-- Start Shop Services Area -->
         <section class="shop-services section home">
@@ -495,29 +370,6 @@
             </div>
         </section>
         <!-- End Shop Services Area -->
-
-        <!-- Start Shop Newsletter  -->
-        <section class="shop-newsletter section">
-            <div class="container">
-                <div class="inner-top">
-                    <div class="row">
-                        <div class="col-lg-8 offset-lg-2 col-12">
-                            <!-- Start Newsletter Inner -->
-                            <div class="inner">
-                                <h4>Newsletter</h4>
-                                <p> Subscribe to our newsletter and get <span>10%</span> off your first purchase</p>
-                                <form action="mail/mail.php" method="get" target="_blank" class="newsletter-inner">
-                                    <input name="EMAIL" placeholder="Your email address" required="" type="email">
-                                    <button class="btn">Subscribe</button>
-                                </form>
-                            </div>
-                            <!-- End Newsletter Inner -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- End Shop Newsletter -->
 
         <%@include file="footer.jsp" %>
     </body>

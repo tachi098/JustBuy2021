@@ -22,194 +22,166 @@
         <section class="shop-home-list section">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="shop-section-title">
-                                    <h1>On sale</h1>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Start Single List  -->
-                        <div class="single-list">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    <div class="list-image overlay">
-                                        <img src="https://via.placeholder.com/115x140" alt="#">
-                                        <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-12 no-padding">
-                                    <div class="content">
-                                        <h4 class="title"><a href="#">Licity jelly leg flat Sandals</a></h4>
-                                        <p class="price with-discount">$59</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Single List  -->
-                        <!-- Start Single List  -->
-                        <div class="single-list">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    <div class="list-image overlay">
-                                        <img src="https://via.placeholder.com/115x140" alt="#">
-                                        <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-12 no-padding">
-                                    <div class="content">
-                                        <h5 class="title"><a href="#">Licity jelly leg flat Sandals</a></h5>
-                                        <p class="price with-discount">$44</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Single List  -->
-                        <!-- Start Single List  -->
-                        <div class="single-list">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    <div class="list-image overlay">
-                                        <img src="https://via.placeholder.com/115x140" alt="#">
-                                        <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-12 no-padding">
-                                    <div class="content">
-                                        <h5 class="title"><a href="#">Licity jelly leg flat Sandals</a></h5>
-                                        <p class="price with-discount">$89</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Single List  -->
+                    <div class="col-12">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#">Active</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link disabled" href="#">Disabled</a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="shop-section-title">
-                                    <h1>Best Seller</h1>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Start Single List  -->
-                        <div class="single-list">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    <div class="list-image overlay">
-                                        <img src="https://via.placeholder.com/115x140" alt="#">
-                                        <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-12 no-padding">
-                                    <div class="content">
-                                        <h5 class="title"><a href="#">Licity jelly leg flat Sandals</a></h5>
-                                        <p class="price with-discount">$65</p>
+                    <div class="col-xl-3 col-lg-4 col-md-4 col-12">
+                        <div class="single-product">
+                            <div class="product-img">
+
+                                <a href="${pageContext.request.contextPath}/GuestIndexController?view=productDetails&id=4}">
+                                    <img class="default-img" src="${pageContext.request.contextPath}/admin/assets/img/avatar.png" alt="#">
+                                    <img class="hover-img" src="${pageContext.request.contextPath}/admin/assets/img/avatar.png" alt="#">
+                                </a>
+
+                                <div class="button-head">
+                                    <div class="product-action-2">
+                                        <c:if test="<%= username.length() > 0%>">
+                                            <a title="Add to cart" href="GuestCartController?view=add">Add to cart</a>
+                                        </c:if>
+                                        <c:if test="<%= username.length() < 1%>">
+                                            <a title="Add to cart" href="GuestLoginController?view=login">Add to cart</a>
+                                        </c:if>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- End Single List  -->
-                        <!-- Start Single List  -->
-                        <div class="single-list">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    <div class="list-image overlay">
-                                        <img src="https://via.placeholder.com/115x140" alt="#">
-                                        <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-12 no-padding">
-                                    <div class="content">
-                                        <h5 class="title"><a href="#">Licity jelly leg flat Sandals</a></h5>
-                                        <p class="price with-discount">$33</p>
-                                    </div>
+
+                            <div class="product-content">
+                                <h3><a href="${pageContext.request.contextPath}/GuestIndexController?view=productDetails&id=4">name</a></h3>
+                                <div class="product-price">
+                                    <span>$5000</span>
                                 </div>
                             </div>
                         </div>
-                        <!-- End Single List  -->
-                        <!-- Start Single List  -->
-                        <div class="single-list">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    <div class="list-image overlay">
-                                        <img src="https://via.placeholder.com/115x140" alt="#">
-                                        <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-12 no-padding">
-                                    <div class="content">
-                                        <h5 class="title"><a href="#">Licity jelly leg flat Sandals</a></h5>
-                                        <p class="price with-discount">$77</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Single List  -->
                     </div>
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="shop-section-title">
-                                    <h1>Top viewed</h1>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Start Single List  -->
-                        <div class="single-list">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    <div class="list-image overlay">
-                                        <img src="https://via.placeholder.com/115x140" alt="#">
-                                        <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-12 no-padding">
-                                    <div class="content">
-                                        <h5 class="title"><a href="#">Licity jelly leg flat Sandals</a></h5>
-                                        <p class="price with-discount">$22</p>
+                    <div class="col-xl-3 col-lg-4 col-md-4 col-12">
+                        <div class="single-product">
+                            <div class="product-img">
+
+                                <a href="${pageContext.request.contextPath}/GuestIndexController?view=productDetails&id=4}">
+                                    <img class="default-img" src="${pageContext.request.contextPath}/admin/assets/img/avatar.png" alt="#">
+                                    <img class="hover-img" src="${pageContext.request.contextPath}/admin/assets/img/avatar.png" alt="#">
+                                </a>
+
+                                <div class="button-head">
+                                    <div class="product-action-2">
+                                        <c:if test="<%= username.length() > 0%>">
+                                            <a title="Add to cart" href="GuestCartController?view=add">Add to cart</a>
+                                        </c:if>
+                                        <c:if test="<%= username.length() < 1%>">
+                                            <a title="Add to cart" href="GuestLoginController?view=login">Add to cart</a>
+                                        </c:if>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- End Single List  -->
-                        <!-- Start Single List  -->
-                        <div class="single-list">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    <div class="list-image overlay">
-                                        <img src="https://via.placeholder.com/115x140" alt="#">
-                                        <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-12 no-padding">
-                                    <div class="content">
-                                        <h5 class="title"><a href="#">Licity jelly leg flat Sandals</a></h5>
-                                        <p class="price with-discount">$35</p>
-                                    </div>
+
+                            <div class="product-content">
+                                <h3><a href="${pageContext.request.contextPath}/GuestIndexController?view=productDetails&id=4">name</a></h3>
+                                <div class="product-price">
+                                    <span>$5000</span>
                                 </div>
                             </div>
                         </div>
-                        <!-- End Single List  -->
-                        <!-- Start Single List  -->
-                        <div class="single-list">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    <div class="list-image overlay">
-                                        <img src="https://via.placeholder.com/115x140" alt="#">
-                                        <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-12 no-padding">
-                                    <div class="content">
-                                        <h5 class="title"><a href="#">Licity jelly leg flat Sandals</a></h5>
-                                        <p class="price with-discount">$99</p>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-4 col-12">
+                        <div class="single-product">
+                            <div class="product-img">
+
+                                <a href="${pageContext.request.contextPath}/GuestIndexController?view=productDetails&id=4}">
+                                    <img class="default-img" src="${pageContext.request.contextPath}/admin/assets/img/avatar.png" alt="#">
+                                    <img class="hover-img" src="${pageContext.request.contextPath}/admin/assets/img/avatar.png" alt="#">
+                                </a>
+
+                                <div class="button-head">
+                                    <div class="product-action-2">
+                                        <c:if test="<%= username.length() > 0%>">
+                                            <a title="Add to cart" href="GuestCartController?view=add">Add to cart</a>
+                                        </c:if>
+                                        <c:if test="<%= username.length() < 1%>">
+                                            <a title="Add to cart" href="GuestLoginController?view=login">Add to cart</a>
+                                        </c:if>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="product-content">
+                                <h3><a href="${pageContext.request.contextPath}/GuestIndexController?view=productDetails&id=4">name</a></h3>
+                                <div class="product-price">
+                                    <span>$5000</span>
+                                </div>
+                            </div>
                         </div>
-                        <!-- End Single List  -->
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-4 col-12">
+                        <div class="single-product">
+                            <div class="product-img">
+
+                                <a href="${pageContext.request.contextPath}/GuestIndexController?view=productDetails&id=4}">
+                                    <img class="default-img" src="${pageContext.request.contextPath}/admin/assets/img/avatar.png" alt="#">
+                                    <img class="hover-img" src="${pageContext.request.contextPath}/admin/assets/img/avatar.png" alt="#">
+                                </a>
+
+                                <div class="button-head">
+                                    <div class="product-action-2">
+                                        <c:if test="<%= username.length() > 0%>">
+                                            <a title="Add to cart" href="GuestCartController?view=add">Add to cart</a>
+                                        </c:if>
+                                        <c:if test="<%= username.length() < 1%>">
+                                            <a title="Add to cart" href="GuestLoginController?view=login">Add to cart</a>
+                                        </c:if>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="product-content">
+                                <h3><a href="${pageContext.request.contextPath}/GuestIndexController?view=productDetails&id=4">name</a></h3>
+                                <div class="product-price">
+                                    <span>$5000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-4 col-12">
+                        <div class="single-product">
+                            <div class="product-img">
+
+                                <a href="${pageContext.request.contextPath}/GuestIndexController?view=productDetails&id=4}">
+                                    <img class="default-img" src="${pageContext.request.contextPath}/admin/assets/img/avatar.png" alt="#">
+                                    <img class="hover-img" src="${pageContext.request.contextPath}/admin/assets/img/avatar.png" alt="#">
+                                </a>
+
+                                <div class="button-head">
+                                    <div class="product-action-2">
+                                        <c:if test="<%= username.length() > 0%>">
+                                            <a title="Add to cart" href="GuestCartController?view=add">Add to cart</a>
+                                        </c:if>
+                                        <c:if test="<%= username.length() < 1%>">
+                                            <a title="Add to cart" href="GuestLoginController?view=login">Add to cart</a>
+                                        </c:if>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="product-content">
+                                <h3><a href="${pageContext.request.contextPath}/GuestIndexController?view=productDetails&id=4">name</a></h3>
+                                <div class="product-price">
+                                    <span>$5000</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -260,32 +232,6 @@
             </div>
         </section>
         <!-- End Shop Services Area -->
-
-        <!-- Start Shop Newsletter  -->
-        <section class="shop-newsletter section">
-            <div class="container">
-                <div class="inner-top">
-                    <div class="row">
-                        <div class="col-lg-8 offset-lg-2 col-12">
-                            <!-- Start Newsletter Inner -->
-                            <div class="inner">
-                                <h4>Newsletter</h4>
-                                <p> Subscribe to our newsletter and get <span>10%</span> off your first purchase</p>
-                                <form action="mail/mail.php" method="get" target="_blank" class="newsletter-inner">
-                                    <input name="EMAIL" placeholder="Your email address" required="" type="email">
-                                    <button class="btn">Subscribe</button>
-                                </form>
-                            </div>
-                            <!-- End Newsletter Inner -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- End Shop Newsletter -->
-
-        
-
         <%@include file="footer.jsp" %>
 
     </body>
