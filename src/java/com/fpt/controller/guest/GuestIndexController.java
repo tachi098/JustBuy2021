@@ -129,7 +129,7 @@ public class GuestIndexController extends HttpServlet {
             String keyword = request.getParameter("keyword") == null ? "" : request.getParameter("keyword");
             int pageMax = request.getParameter("pageMax") == null ? 9 : Integer.valueOf(request.getParameter("pageMax"));
             int count = 0;
-            if ("cateId".equals(cateId)) {
+            if ("cateId".equals(cateId) || "0".equals(cateId)) {
                 count = ((Number) ez.createNativeQuery("SELECT COUNT(*) FROM product WHERE name LIKE ?").setParameter(1, '%' + keyword + '%').getSingleResult()).intValue();
             } else if (!"cateId".equals(cateId)) {
                 count = ((Number) ez.createNativeQuery("SELECT COUNT(*) FROM product  WHERE cateId = ?").setParameter(1, Integer.parseInt(cateId)).getSingleResult()).intValue();
@@ -142,7 +142,7 @@ public class GuestIndexController extends HttpServlet {
             request.setAttribute("pages", pages);
 
             Query queryShowProduct = null;
-            if ("cateId".equals(cateId)) {
+            if ("cateId".equals(cateId) || "0".equals(cateId)) {
                 queryShowProduct = ez.createNativeQuery("with abc as (select *, ROW_NUMBER() over (order by id desc) as Row_Int from product WHERE name LIKE ?) select * from abc WHERE Row_Int BETWEEN ? AND ?", Product.class);
                 queryShowProduct.setParameter(1, '%' + keyword + '%');
                 queryShowProduct.setParameter(2, start);
