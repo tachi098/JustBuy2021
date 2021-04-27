@@ -103,8 +103,8 @@
             <div class="form-group row">
                 <label class="col-form-label col-4">Username</label>
                 <div class="col-8">
-                    <input type="text" class="form-control" name="name" required="required">
-                </div>        	
+                    <input type="text" minlength="7" class="form-control" name="name" required="required">
+                </div>    
             </div>
             <div class="form-group row">
                 <label class="col-form-label col-4">Email Address</label>
@@ -115,15 +115,21 @@
             <div class="form-group row">
                 <label class="col-form-label col-4">Password</label>
                 <div class="col-8">
-                    <input type="password" class="form-control" name="pass" required="required">
+                    <input type="password" minlength="7" class="form-control" name="pass" required="required">
                 </div>        	
             </div>
             <div class="form-group row">
                 <label class="col-form-label col-4">Confirm Password</label>
                 <div class="col-8">
-                    <input type="password" class="form-control" name="cfpass" required="required">
+                    <input type="password" minlength="8" class="form-control" name="cfpass" required="required">
                 </div>        	
             </div>
+            <c:if test="${not empty errorPass}">
+                <p style="color: red">${errorPass}</p>
+            </c:if>
+            <c:if test="${not empty errorUsername}">
+                <p style="color: red">${errorUsername}</p>
+            </c:if>
             <div class="form-group row">
                 <div class="col-8 offset-4">
                     <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
