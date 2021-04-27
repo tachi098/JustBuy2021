@@ -38,14 +38,15 @@
                     <div class="right-content">
                         <ul class="list-main">
                                 <c:if test="<%= username.length() > 0%>">
-                                <li><i class="ti-user"></i> <a href="#"><%= username%></a></li>
+                                <li><i class="ti-user"></i> <a href="${pageContext.request.contextPath}/GuestUserController?view=show"><%= username%></a></li>
                                 </c:if>
 
                             <c:if test="<%= username.length() > 0%>">
-                                <li><i class="ti-power-off"></i><a href="GuestLoginController?view=logout">Logout</a></li>
-                                    </c:if>
-                                    <c:if test="<%= username.length() == 0%>">
-                                <li><i class="ti-power-off"></i><a href="GuestLoginController?view=show">Login</a></li>
+                                <li><i class="ti-receipt"></i><a href="${pageContext.request.contextPath}/GuestBillController?view=show">Bill History</a></li>
+                                <li><i class="ti-power-off"></i><a href="${pageContext.request.contextPath}/GuestLoginController?view=logout">Logout</a></li>
+                            </c:if>
+                            <c:if test="<%= username.length() == 0%>">
+                                <li><i class="ti-power-off"></i><a href="${pageContext.request.contextPath}/GuestLoginController?view=show">Login</a></li>
                                     </c:if>
                         </ul>
                     </div>
