@@ -64,7 +64,6 @@
                                                             <th>Name</th>
                                                             <th>Email</th>
                                                             <th>Phone</th>
-                                                            <th>City</th>
                                                             <th>Username</th>
                                                             <th>Status</th>
                                                             <th>Action</th>
@@ -78,7 +77,6 @@
                                                                     <td>${user.name}</td>
                                                                     <td>${user.email}</td>
                                                                     <td>${user.phone}</td>
-                                                                    <td>${user.address.city}</td>
                                                                     <td>${user.username}</td>
                                                                     <td>
                                                                         <span class="badge badge-success">Enable</span>

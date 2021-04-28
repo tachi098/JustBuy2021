@@ -110,30 +110,30 @@ public class AdminUserController extends HttpServlet {
             users.setAvatar(fileName);
         }
 
-        Query queryAddress = em.createNativeQuery("SELECT * FROM address WHERE userId = ?", Address.class);
-        queryAddress.setParameter(1, id);
-        List<Address> addresses = queryAddress.getResultList();
-        Address address;
-
-        if (addresses.size() > 0) {
-            address = (Address) queryAddress.getSingleResult();
-            address.setLine1(line1);
-            address.setLine2(line2);
-            address.setCity(city);
-            address.setState(state);
-            address.setZipcode(zipcode);
-
-            try {
-                et.begin();
-                em.merge(users);
-                em.merge(address);
-                et.commit();
-            } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-                et.rollback();
-            }
-
-        }
+//        Query queryAddress = em.createNativeQuery("SELECT * FROM address WHERE userId = ?", Address.class);
+//        queryAddress.setParameter(1, id);
+//        List<Address> addresses = queryAddress.getResultList();
+//        Address address;
+//
+//        if (addresses.size() > 0) {
+//            address = (Address) queryAddress.getSingleResult();
+//            address.setLine1(line1);
+//            address.setLine2(line2);
+//            address.setCity(city);
+//            address.setState(state);
+//            address.setZipcode(zipcode);
+//
+//            try {
+//                et.begin();
+//                em.merge(users);
+//                em.merge(address);
+//                et.commit();
+//            } catch (Exception e) {
+//                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+//                et.rollback();
+//            }
+//
+//        }
 
         response.sendRedirect("AdminUserController?view=show");
     }

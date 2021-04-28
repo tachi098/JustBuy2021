@@ -82,46 +82,7 @@
                                 </div>
                                 <!-- /.card -->
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card card-primary">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Update Address</h3>
-
-                                        <div class="card-tools">
-                                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                                <i class="fas fa-minus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="form-group">
-                                            <label>City</label>
-                                            <input type="text" class="form-control" value="${users.address.city}" name="city" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Zip Code</label>
-                                            <input type="text" class="form-control" value="${users.address.zipcode}" name="zipcode" required pattern="^[0-9]{1,}$" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label>State</label>
-                                            <input type="text" class="form-control" value="${users.address.state}" name="state" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Address 1</label>
-                                            <input type="text" class="form-control" value="${users.address.line1}" name="line1" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Address 2</label>
-                                            <input type="text" class="form-control" value="${users.address.line2}" name="line2">
-                                        </div>
-                                    </div>
-                                    <!-- /.card-body -->
-                                </div>
-                                <!-- /.card -->
-                            </div>
-                        </div>            
+                        </div>        
                         <div class="row">
                             <div class="col-12">
                                 <a href="AdminUserController?view=show" class="btn btn-secondary">Back</a>
