@@ -109,6 +109,8 @@ public class AdminUserController extends HttpServlet {
             String fileName = FileAny.upload(request, avatar, "admin/assets/img");
             users.setAvatar(fileName);
         }
+        
+        
 
 //        Query queryAddress = em.createNativeQuery("SELECT * FROM address WHERE userId = ?", Address.class);
 //        queryAddress.setParameter(1, id);
@@ -123,15 +125,14 @@ public class AdminUserController extends HttpServlet {
 //            address.setState(state);
 //            address.setZipcode(zipcode);
 //
-//            try {
-//                et.begin();
-//                em.merge(users);
-//                em.merge(address);
-//                et.commit();
-//            } catch (Exception e) {
-//                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-//                et.rollback();
-//            }
+            try {
+                et.begin();
+                em.merge(users);
+                et.commit();
+            } catch (Exception e) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+                et.rollback();
+            }
 //
 //        }
 
